@@ -112,7 +112,7 @@ const AuthPage = () => {
       if (loginMethod === 'email') body.email = loginData.email;
       else body.phone = `+977${loginData.phone}`;
 
-      const res = await fetch('http://localhost:5001/api/auth/login', {
+      const res = await fetch(process.env.REACT_APP_API_URL + '/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -160,7 +160,7 @@ const AuthPage = () => {
     try {
       if (signupMethod === 'email') {
         // Send OTP to email
-        const res = await fetch('http://localhost:5001/api/auth/send-email-otp', {
+        const res = await fetch(process.env.REACT_APP_API_URL + '/api/auth/send-email-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -186,7 +186,7 @@ const AuthPage = () => {
         }
       } else {
         const phone = `+977${signupData.phone}`;
-        const res = await fetch('http://localhost:5001/api/otp/send', {
+        const res = await fetch(process.env.REACT_APP_API_URL + '/api/otp/send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ phoneNumber: phone }),

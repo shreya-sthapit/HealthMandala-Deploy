@@ -58,7 +58,7 @@ const Navbar = () => {
   const fetchNotificationsPreview = async (userId) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5001/api/notifications/${userId}`, {
+      const res = await fetch(`/api/notifications/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -237,7 +237,7 @@ const Navbar = () => {
           <button className="gnav-profile-btn" onClick={() => setShowDropdown(v => !v)}>
             {user.profilePhoto ? (
               <img
-                src={`http://localhost:5001/${user.profilePhoto}`}
+                src={`/${user.profilePhoto}`}
                 alt={user.firstName}
                 className="gnav-avatar-img"
                 onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
@@ -261,7 +261,7 @@ const Navbar = () => {
               <div className="gnav-dropdown-header">
                 <div className="gnav-dd-avatar">
                   {user.profilePhoto ? (
-                    <img src={`http://localhost:5001/${user.profilePhoto}`} alt="" />
+                    <img src={`/${user.profilePhoto}`} alt="" />
                   ) : (
                     <span>{initials}</span>
                   )}

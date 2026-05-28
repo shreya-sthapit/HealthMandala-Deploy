@@ -193,7 +193,7 @@ const PatientRegistrationForm = () => {
       fd.append('nidFront', formData.nidFront);
       fd.append('nidBack', formData.nidBack);
 
-      const response = await fetch('http://localhost:5001/api/patient/register', { method: 'POST', body: fd });
+      const response = await fetch(process.env.REACT_APP_API_URL + '/api/patient/register', { method: 'POST', body: fd });
       const data = await response.json();
 
       if (data.success) {

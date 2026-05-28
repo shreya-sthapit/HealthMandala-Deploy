@@ -25,7 +25,7 @@ const DoctorProfile = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
     if (!userData.id) { setError('User not found.'); setLoading(false); return; }
-    fetch(`http://localhost:5001/api/doctor/profile/${userData.id}`)
+    fetch(`/api/doctor/profile/${userData.id}`)
       .then(r => r.json())
       .then(data => {
         if (data.success) setProfile(data.profile);
@@ -49,7 +49,7 @@ const DoctorProfile = () => {
 
   const p = profile;
   const initials = `${p.firstName?.[0] || ''}${p.lastName?.[0] || ''}`.toUpperCase();
-  const avatarSrc = p.profilePhoto ? `http://localhost:5001/${p.profilePhoto}` : null;
+  const avatarSrc = p.profilePhoto ? `/${p.profilePhoto}` : null;
 
   return (
     <div className="dp-page">

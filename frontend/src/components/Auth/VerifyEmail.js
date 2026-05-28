@@ -61,7 +61,7 @@ const VerifyEmail = () => {
     if (code.length < 6) { setError('Please enter the 6-digit code.'); return; }
     setLoading(true); setError('');
     try {
-      const res = await fetch('http://localhost:5001/api/auth/verify-email-otp', {
+      const res = await fetch(process.env.REACT_APP_API_URL + '/api/auth/verify-email-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp: code }),
@@ -88,7 +88,7 @@ const VerifyEmail = () => {
     if (!canResend) return;
     setResending(true); setResendMsg('');
     try {
-      const res = await fetch('http://localhost:5001/api/auth/resend-email-otp', {
+      const res = await fetch(process.env.REACT_APP_API_URL + '/api/auth/resend-email-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

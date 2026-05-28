@@ -64,7 +64,7 @@ const Home = () => {
 
   const fetchUpcomingAppointments = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/appointments/patient/${userId}`);
+      const response = await fetch(`/api/appointments/patient/${userId}`);
       const data = await response.json();
       
       if (data.success) {
@@ -99,7 +99,7 @@ const Home = () => {
 
   const fetchApprovedDoctors = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/doctor/approved');
+      const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
       return await response.json();
     } catch (error) {
       console.error('Error fetching doctors:', error);
@@ -131,7 +131,7 @@ const Home = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/appointments/cancel/${appointmentId}`, {
+      const response = await fetch(`/api/appointments/cancel/${appointmentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -415,7 +415,7 @@ const Home = () => {
                   <div className="doctor-avatar">
                     {doctor.profilePhoto ? (
                       <img 
-                        src={`http://localhost:5001/${doctor.profilePhoto}`} 
+                        src={`/${doctor.profilePhoto}`} 
                         alt={doctor.name}
                         onError={(e) => {
                           e.target.style.display = 'none';

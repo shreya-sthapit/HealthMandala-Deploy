@@ -14,7 +14,7 @@ const AllSpecialties = () => {
 
   const fetchSpecialtyCounts = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/doctor/specialty-counts');
+      const res = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/specialty-counts');
       const data = await res.json();
       if (data.success) {
         setSpecialtyCounts(data.counts);

@@ -24,7 +24,7 @@ const AppointmentCard = ({ appointment, onClose }) => {
     const fetchProfile = async () => {
       try {
         if (userData.id) {
-          const res = await fetch(`http://localhost:5001/api/patient/profile/${userData.id}`);
+          const res = await fetch(`/api/patient/profile/${userData.id}`);
           const data = await res.json();
           if (data.success && data.profile) {
             const p = data.profile;

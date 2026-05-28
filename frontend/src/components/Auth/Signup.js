@@ -112,7 +112,7 @@ const Signup = () => {
         const phoneNumber = `+977${formData.phone}`;
         
         // Call backend to send OTP via Twilio
-        const response = await fetch('http://localhost:5001/api/otp/send', {
+        const response = await fetch(process.env.REACT_APP_API_URL + '/api/otp/send', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

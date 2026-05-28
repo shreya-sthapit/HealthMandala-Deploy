@@ -5,7 +5,7 @@ import '../Booking/Booking.css';
 import '../Doctors/SelectDoctor.css';
 import LogoutModal from '../Profile/LogoutModal';
 
-const API = 'http://localhost:5001/api';
+const API = '/api';
 const ALLOWED = ['receptionist', 'staff', 'hospital_admin', 'admin'];
 
 // ── Week helpers ──────────────────────────────────────────────────────────────
@@ -699,7 +699,7 @@ function WalkinView({ onRefresh }) {
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1.25rem', minWidth: '340px', flexShrink: 0 }}>
                       <div style={{ width: '160px', height: '160px', borderRadius: '16px', overflow: 'hidden', flexShrink: 0, background: 'var(--primary-color, #00a896)' }}>
                         {photoPath
-                          ? <img src={`http://localhost:5001/${photoPath}`} alt={doc.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+                          ? <img src={`/${photoPath}`} alt={doc.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
                           : null}
                         <div style={{ display: photoPath ? 'none' : 'flex', width: '100%', height: '100%', background: 'linear-gradient(135deg,#00c9b1,#0284c7)', color: 'white', alignItems: 'center', justifyContent: 'center', fontSize: '4rem', fontWeight: 700 }}>
                           {doc.name.split(' ')[1]?.[0] || 'D'}
@@ -799,7 +799,7 @@ function WalkinView({ onRefresh }) {
               <div className="doctor-profile">
                 <div className="doctor-avatar-circle">
                   {selectedDoctor?.profilePhoto
-                    ? <img src={`http://localhost:5001/${selectedDoctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`} alt={selectedDoctor.name} onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+                    ? <img src={`/${selectedDoctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`} alt={selectedDoctor.name} onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
                     : null}
                   <div className="avatar-circle-fallback" style={{ display: selectedDoctor?.profilePhoto ? 'none' : 'flex' }}>
                     {selectedDoctor?.name?.split(' ').find(w => w !== 'Dr.')?.[0] || 'D'}
@@ -905,7 +905,7 @@ function WalkinView({ onRefresh }) {
                 <div className="step4-doctor-header">
                   <div className="step4-doctor-avatar">
                     {selectedDoctor?.profilePhoto
-                      ? <img src={`http://localhost:5001/${selectedDoctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`} alt={selectedDoctor.name} onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+                      ? <img src={`/${selectedDoctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`} alt={selectedDoctor.name} onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
                       : null}
                     <div className="step4-avatar-fallback" style={{ display: selectedDoctor?.profilePhoto ? 'none' : 'flex' }}>
                       {selectedDoctor?.name?.split(' ').find(w => w !== 'Dr.')?.[0] || 'D'}

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../HospitalDashboard/HospitalDashboard.css';
 import LogoutModal from '../Profile/LogoutModal';
 
-const API = 'http://localhost:5001/api';
+const API = '/api';
 const ALLOWED = ['pharmacist', 'staff', 'hospital_admin', 'admin'];
 
 /* ── Icons ── */

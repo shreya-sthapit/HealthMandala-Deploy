@@ -42,7 +42,7 @@ const HospitalAppointments = () => {
 
   const fetchHospitals = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/partner/approved');
+      const res = await fetch(process.env.REACT_APP_API_URL + '/api/partner/approved');
       const data = await res.json();
       if (data.success && data.hospitals) {
         setHospitals(data.hospitals);

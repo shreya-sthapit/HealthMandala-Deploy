@@ -90,12 +90,12 @@ const MyAppointments = () => {
       let response;
 
       if (userData.id && userData.id !== 'null' && userData.id !== 'undefined') {
-        response = await fetch(`http://localhost:5001/api/appointments/patient/${userData.id}`);
+        response = await fetch(`/api/appointments/patient/${userData.id}`);
       } else if (userData.firstName && userData.lastName) {
         const patientName = `${userData.firstName} ${userData.lastName}`;
         const patientPhone = userData.phone || 'undefined';
         response = await fetch(
-          `http://localhost:5001/api/appointments/patient-by-info/${encodeURIComponent(patientName)}/${encodeURIComponent(patientPhone)}`
+          `/api/appointments/patient-by-info/${encodeURIComponent(patientName)}/${encodeURIComponent(patientPhone)}`
         );
       } else {
         setLoading(false);
@@ -118,7 +118,7 @@ const MyAppointments = () => {
     if (!window.confirm('Are you sure you want to cancel this appointment?')) return;
 
     try {
-      const response = await fetch(`http://localhost:5001/api/appointments/cancel/${appointmentId}`, { method: 'PUT' });
+      const response = await fetch(`/api/appointments/cancel/${appointmentId}`, { method: 'PUT' });
       const data = await response.json();
       if (data.success) fetchAppointments();
       else alert('Failed to cancel appointment');

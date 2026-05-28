@@ -13,7 +13,7 @@ import HDProfile from './views/HDProfile';
 import HDReports from './views/HDReports';
 import HDNotifications from './views/HDNotifications';
 
-const API = 'http://localhost:5001/api/hospital-dashboard';
+const API = '/api/hospital-dashboard';
 
 const NAV = [
   { section: 'Overview' },

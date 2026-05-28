@@ -362,16 +362,16 @@ const Profile = () => {
     try {
       setLoading(true);
       const statusEndpoint = role === 'doctor'
-        ? `http://localhost:5001/api/doctor/status/${uid}`
-        : `http://localhost:5001/api/patient/status/${uid}`;
+        ? `/api/doctor/status/${uid}`
+        : `/api/patient/status/${uid}`;
 
       const statusRes = await fetch(statusEndpoint);
       const statusData = await statusRes.json();
 
       if (statusData.success && statusData.hasRegistration) {
         const profileEndpoint = role === 'doctor'
-          ? `http://localhost:5001/api/doctor/profile/${uid}`
-          : `http://localhost:5001/api/patient/profile/${uid}`;
+          ? `/api/doctor/profile/${uid}`
+          : `/api/patient/profile/${uid}`;
 
         const profileRes = await fetch(profileEndpoint);
         const profileData = await profileRes.json();
@@ -402,8 +402,8 @@ const Profile = () => {
             // nid
             nidNumber: p.nidNumber || '',
           });
-          if (p.nidFrontImage) setNidFrontPreview(`http://localhost:5001/${p.nidFrontImage}`);
-          if (p.nidBackImage) setNidBackPreview(`http://localhost:5001/${p.nidBackImage}`);
+          if (p.nidFrontImage) setNidFrontPreview(`/${p.nidFrontImage}`);
+          if (p.nidBackImage) setNidBackPreview(`/${p.nidBackImage}`);
         }
       } else {
         const userData = JSON.parse(localStorage.getItem('user') || '{}');
@@ -450,7 +450,7 @@ const Profile = () => {
       if (nidFrontFile) fd.append('nidFront', nidFrontFile);
       if (nidBackFile) fd.append('nidBack', nidBackFile);
 
-      const res = await fetch(`http://localhost:5001/api/patient/profile/${userId}`, {
+      const res = await fetch(`/api/patient/profile/${userId}`, {
         method: 'PUT',
         body: fd,
       });
@@ -482,7 +482,7 @@ const Profile = () => {
   const initials = profile
     ? `${profile.firstName?.[0] || ''}${profile.lastName?.[0] || ''}`.toUpperCase()
     : '';
-  const avatarSrc = avatarPreview || (profile?.profilePhoto ? `http://localhost:5001/${profile.profilePhoto}` : null);
+  const avatarSrc = avatarPreview || (profile?.profilePhoto ? `/${profile.profilePhoto}` : null);
   const mrn = profile?.mrn || 'MRN-' + (userId ? String(userId).slice(-5).toUpperCase() : '00000');
 
   if (loading) {

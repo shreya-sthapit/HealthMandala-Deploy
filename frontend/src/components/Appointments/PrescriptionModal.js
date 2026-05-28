@@ -13,7 +13,7 @@ const PrescriptionModal = ({ appointment, onClose }) => {
   const fetchPrescriptions = async () => {
     try {
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
-      const response = await fetch(`http://localhost:5001/api/prescriptions/patient/${userData.id}`);
+      const response = await fetch(`/api/prescriptions/patient/${userData.id}`);
       const data = await response.json();
       if (data.success) {
         setPrescriptions(data.prescriptions);

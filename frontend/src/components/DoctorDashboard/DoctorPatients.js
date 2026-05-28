@@ -20,7 +20,7 @@ const DoctorPatients = ({ embedded = false }) => {
       console.log('Fetching patients for doctor:', userData);
       
       if (userData.id) {
-        const response = await fetch(`http://localhost:5001/api/appointments/doctor-patients/${userData.id}`);
+        const response = await fetch(`/api/appointments/doctor-patients/${userData.id}`);
         const data = await response.json();
         console.log('Patients response:', data);
         
@@ -120,7 +120,7 @@ const DoctorPatients = ({ embedded = false }) => {
                   <div className="patient-card-header">
                     {patient.profilePhoto ? (
                       <img 
-                        src={`http://localhost:5001${patient.profilePhoto}`} 
+                        src={`${patient.profilePhoto}`} 
                         alt={patient.name}
                         className="avatar-img"
                         onError={(e) => {

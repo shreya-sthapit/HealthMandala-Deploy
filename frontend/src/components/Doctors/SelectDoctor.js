@@ -65,7 +65,7 @@ const SelectDoctor = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/doctor/approved');
+      const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
       const data = await response.json();
       if (data.success && data.doctors) {
         setDoctors(data.doctors);
@@ -85,7 +85,7 @@ const SelectDoctor = () => {
     if (bookedSlotsMap[key] !== undefined) return; // already fetched this session
     try {
       const res = await fetch(
-        `http://localhost:5001/api/doctor/slots/${doctorId}?date=${dateStr}&hospitalName=${encodeURIComponent(hospitalName || '')}`
+        `/api/doctor/slots/${doctorId}?date=${dateStr}&hospitalName=${encodeURIComponent(hospitalName || '')}`
       );
       const data = await res.json();
       if (data.success && data.slots) {
@@ -425,7 +425,7 @@ const SelectDoctor = () => {
                   >
                     <div className="doctor-photo">
                       {photoPath ? (
-                        <img src={`http://localhost:5001/${photoPath}`} alt={doc.name}
+                        <img src={`/${photoPath}`} alt={doc.name}
                           onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
                         />
                       ) : null}

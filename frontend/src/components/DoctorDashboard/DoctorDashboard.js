@@ -58,7 +58,7 @@ function MedicineSearch({ value, onChange }) {
       try {
         const token = localStorage.getItem('token');
         const res = await fetch(
-          `http://localhost:5001/api/inventory?search=${encodeURIComponent(q)}`,
+          `/api/inventory?search=${encodeURIComponent(q)}`,
           { headers: token ? { Authorization: `Bearer ${token}` } : {} }
         );
         const data = await res.json();
@@ -176,7 +176,7 @@ const LiveQueue = ({ doctorId, doctorName }) => {
   const fetchQueue = useCallback(async () => {
     if (!doctorId) return;
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/doctor/${doctorId}`);
+      const res = await fetch(`/api/appointments/doctor/${doctorId}`);
       const data = await res.json();
       if (data.success) {
         const t = today();
@@ -212,7 +212,7 @@ const LiveQueue = ({ doctorId, doctorName }) => {
     // Also try WebSocket for instant updates
     let ws;
     try {
-      ws = new WebSocket('ws://localhost:5001');
+      ws = new WebSocket('process.env.REACT_APP_WS_URL || 'ws://localhost:5001'');
       wsRef.current = ws;
       ws.onmessage = (e) => {
         try {
@@ -258,7 +258,7 @@ const LiveQueue = ({ doctorId, doctorName }) => {
       const validMeds = medicines.filter(m => m.name.trim());
 
       // Always create a prescription record so the pharmacist sees the visit
-      await fetch('http://localhost:5001/api/prescriptions/create', {
+      await fetch(process.env.REACT_APP_API_URL + '/api/prescriptions/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -277,7 +277,7 @@ const LiveQueue = ({ doctorId, doctorName }) => {
       });
 
       // Mark appointment as 'prescribed' — pharmacist will finalize to 'completed'
-      await fetch(`http://localhost:5001/api/appointments/complete/${selected._id}`, {
+      await fetch(`/api/appointments/complete/${selected._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ doctorNotes: advice }),
@@ -531,7 +531,7 @@ const ProfileView = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
     if (!userData.id) { setError('User not found.'); setLoading(false); return; }
-    fetch(`http://localhost:5001/api/doctor/profile/${userData.id}`)
+    fetch(`/api/doctor/profile/${userData.id}`)
       .then(r => r.json())
       .then(data => {
         if (data.success) setProfile(data.profile);
@@ -550,7 +550,7 @@ const ProfileView = () => {
 
   const p = profile;
   const initials = `${p.firstName?.[0] || ''}${p.lastName?.[0] || ''}`.toUpperCase();
-  const avatarSrc = p.profilePhoto ? `http://localhost:5001/${p.profilePhoto}` : null;
+  const avatarSrc = p.profilePhoto ? `/${p.profilePhoto}` : null;
 
   return (
     <div className="dp-content">
@@ -639,8 +639,8 @@ const DoctorDashboard = () => {
 
     // Fetch profile + today count
     Promise.all([
-      fetch(`http://localhost:5001/api/doctor/profile/${userData.id}`).then(r => r.json()),
-      fetch(`http://localhost:5001/api/appointments/doctor/${userData.id}`).then(r => r.json()),
+      fetch(`/api/doctor/profile/${userData.id}`).then(r => r.json()),
+      fetch(`/api/appointments/doctor/${userData.id}`).then(r => r.json()),
     ]).then(([profile, apts]) => {
       if (profile.success) {
         setDoctor(d => ({ ...d, specialty: profile.profile.specialization || '' }));
@@ -676,7 +676,7 @@ const DoctorDashboard = () => {
     setPwdSaving(true);
     try {
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
-      const res = await fetch('http://localhost:5001/api/auth/change-password', {
+      const res = await fetch(process.env.REACT_APP_API_URL + '/api/auth/change-password', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: userData.id, currentPassword: pwdForm.current, newPassword: pwdForm.next }),

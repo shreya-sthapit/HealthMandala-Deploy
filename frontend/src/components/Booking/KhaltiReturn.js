@@ -36,7 +36,7 @@ const KhaltiReturn = () => {
 
       try {
         // Verify with backend
-        const verifyRes = await fetch('http://localhost:5001/api/khalti/verify', {
+        const verifyRes = await fetch(process.env.REACT_APP_API_URL + '/api/khalti/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pidx }),
@@ -62,7 +62,7 @@ const KhaltiReturn = () => {
         console.log('Retrieved booking state:', bookingState);
 
         // Save appointment
-        const bookRes = await fetch('http://localhost:5001/api/appointments/book', {
+        const bookRes = await fetch(process.env.REACT_APP_API_URL + '/api/appointments/book', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

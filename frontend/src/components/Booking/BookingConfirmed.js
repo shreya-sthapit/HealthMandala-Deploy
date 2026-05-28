@@ -94,7 +94,7 @@ const BookingConfirmed = () => {
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
       
       if (userData.id) {
-        const response = await fetch(`http://localhost:5001/api/patient/profile/${userData.id}`);
+        const response = await fetch(`/api/patient/profile/${userData.id}`);
         const data = await response.json();
         
         if (data.success && data.profile) {

@@ -23,7 +23,7 @@ const FindDoctors = () => {
     const fetchDoctors = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5001/api/doctor/approved');
+        const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
         const data = await response.json();
         
         if (data.success && data.doctors && data.doctors.length > 0) {
@@ -125,7 +125,7 @@ const FindDoctors = () => {
                 <div className="doctor-avatar-large">
                   {doctor.profilePhoto ? (
                     <img 
-                      src={`http://localhost:5001/${doctor.profilePhoto}`} 
+                      src={`/${doctor.profilePhoto}`} 
                       alt={doctor.name}
                       onError={(e) => {
                         e.target.style.display = 'none';

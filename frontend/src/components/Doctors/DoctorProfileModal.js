@@ -36,7 +36,7 @@ const DoctorProfileModal = ({ doctor, onClose, nextAvailable }) => {
           <div className="modal-doctor-photo">
             {photoPath ? (
               <img 
-                src={`http://localhost:5001/${photoPath}`} 
+                src={`/${photoPath}`} 
                 alt={doctor.name}
                 onError={(e) => { 
                   e.target.style.display = 'none'; 

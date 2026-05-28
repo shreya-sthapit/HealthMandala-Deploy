@@ -24,3 +24,4 @@ yarn-error.log*
 *.mp4
 *.mov
 *.avi
+.env

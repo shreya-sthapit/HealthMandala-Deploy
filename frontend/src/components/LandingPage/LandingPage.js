@@ -26,7 +26,7 @@ const LandingPage = () => {
 
   const fetchHospitals = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/partner/approved');
+      const res = await fetch(process.env.REACT_APP_API_URL + '/api/partner/approved');
       const data = await res.json();
       if (data.success && data.hospitals) {
         setHospitals(data.hospitals); // Store all hospitals for dropdown
@@ -41,8 +41,8 @@ const LandingPage = () => {
   const fetchDoctorsAndSpecialties = async () => {
     try {
       const [doctorsRes, countsRes] = await Promise.all([
-        fetch('http://localhost:5001/api/doctor/approved'),
-        fetch('http://localhost:5001/api/doctor/specialty-counts')
+        fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved'),
+        fetch(process.env.REACT_APP_API_URL + '/api/doctor/specialty-counts')
       ]);
 
       const doctorsData = await doctorsRes.json();
@@ -421,7 +421,7 @@ const LandingPage = () => {
                   <div className="doctor-image">
                     {photoPath ? (
                       <img
-                        src={`http://localhost:5001/${photoPath}`}
+                        src={`/${photoPath}`}
                         alt={doctor.name}
                         onError={(e) => {
                           e.target.style.display = 'none';
@@ -547,7 +547,7 @@ const LandingPage = () => {
                   <div className="hospital-image">
                     {hospital.logoUrl ? (
                       <img 
-                        src={`http://localhost:5001${hospital.logoUrl}`} 
+                        src={`${hospital.logoUrl}`} 
                         alt={hospital.hospitalName}
                         onError={(e) => {
                           e.target.style.display = 'none';

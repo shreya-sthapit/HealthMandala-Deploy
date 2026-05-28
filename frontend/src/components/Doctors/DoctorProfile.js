@@ -15,7 +15,7 @@ const DoctorProfile = () => {
         setLoading(true);
         
         // First get all approved doctors
-        const response = await fetch('http://localhost:5001/api/doctor/approved');
+        const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
         const data = await response.json();
         
         if (data.success && data.doctors) {
@@ -151,7 +151,7 @@ const DoctorProfile = () => {
                 <div className="profile-avatar">
                   {doctor.profilePhoto ? (
                     <img 
-                      src={`http://localhost:5001/${doctor.profilePhoto}`} 
+                      src={`/${doctor.profilePhoto}`} 
                       alt={doctor.name}
                       onError={(e) => {
                         e.target.style.display = 'none';

@@ -44,7 +44,7 @@ const DoctorAuth = () => {
       if (loginMethod === 'email') body.email = loginData.email;
       else body.phone = `+977${loginData.phone}`;
 
-      const res = await fetch('http://localhost:5001/api/auth/login', {
+      const res = await fetch(process.env.REACT_APP_API_URL + '/api/auth/login', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       });
       const data = await res.json();
@@ -65,7 +65,7 @@ const DoctorAuth = () => {
         if (data.user.role === 'staff') {
           try {
             const staffRes = await fetch(
-              `http://localhost:5001/api/hospital-dashboard/staff/by-user/${data.user.id}`,
+              `/api/hospital-dashboard/staff/by-user/${data.user.id}`,
               { headers: { Authorization: `Bearer ${data.token}` } }
             );
             const staffData = await staffRes.json();

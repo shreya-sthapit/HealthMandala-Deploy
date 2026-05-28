@@ -195,7 +195,7 @@ const BookAppointment = () => {
       
       setLoadingDepartments(true);
       try {
-        const response = await fetch(`http://localhost:5001/api/hospital-dashboard/departments/public/${encodeURIComponent(hospitalFilter)}`);
+        const response = await fetch(`/api/hospital-dashboard/departments/public/${encodeURIComponent(hospitalFilter)}`);
         const data = await response.json();
         
         if (data.success) {
@@ -220,7 +220,7 @@ const BookAppointment = () => {
     const fetchDoctors = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5001/api/doctor/approved');
+        const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
         const data = await response.json();
         
         if (data.success && data.doctors && data.doctors.length > 0) {
@@ -327,7 +327,7 @@ const BookAppointment = () => {
           doctorHospitalSchedules: booking.doctor.hospitalSchedules
         });
         
-        const url = `http://localhost:5001/api/doctor/slots/${doctorId}?date=${formattedDate}&hospitalName=${encodeURIComponent(hospitalName)}`;
+        const url = `/api/doctor/slots/${doctorId}?date=${formattedDate}&hospitalName=${encodeURIComponent(hospitalName)}`;
         console.log('Slots API URL:', url);
         
         const response = await fetch(url);
@@ -389,7 +389,7 @@ const BookAppointment = () => {
           return;
         }
 
-        const response = await fetch(`http://localhost:5001/api/patient/profile/${userId}`);
+        const response = await fetch(`/api/patient/profile/${userId}`);
         const data = await response.json();
         
         console.log('Patient profile response:', data);
@@ -723,7 +723,7 @@ const BookAppointment = () => {
     if (bookedSlotsMap[key] !== undefined) return; // already fetched this session
     try {
       const res = await fetch(
-        `http://localhost:5001/api/doctor/slots/${doctorId}?date=${dateStr}&hospitalName=${encodeURIComponent(hospitalName || '')}`
+        `/api/doctor/slots/${doctorId}?date=${dateStr}&hospitalName=${encodeURIComponent(hospitalName || '')}`
       );
       const data = await res.json();
       if (data.success && data.slots) {
@@ -882,7 +882,7 @@ const BookAppointment = () => {
       try {
         console.log('Fetching tokens for:', dateObj.full);
         const response = await fetch(
-          `http://localhost:5001/api/appointments/available-tokens/${booking.doctor.id}/${dateObj.full}`
+          `/api/appointments/available-tokens/${booking.doctor.id}/${dateObj.full}`
         );
         const data = await response.json();
         
@@ -974,7 +974,7 @@ const BookAppointment = () => {
     for (const dateObj of candidates) {
       try {
         const res = await fetch(
-          `http://localhost:5001/api/appointments/available-tokens/${doctor.id}/${dateObj.full}`
+          `/api/appointments/available-tokens/${doctor.id}/${dateObj.full}`
         );
         const data = await res.json();
         if (!data.success) continue;
@@ -1043,7 +1043,7 @@ const BookAppointment = () => {
 
   const fetchAvailableTokens = async (doctorId, date) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/appointments/available-tokens/${doctorId}/${date}`);
+      const response = await fetch(`/api/appointments/available-tokens/${doctorId}/${date}`);
       const data = await response.json();
       
       if (data.success) {
@@ -1151,7 +1151,7 @@ const BookAppointment = () => {
       let patientProfile = null;
       if (userData.id) {
         try {
-          const profileRes = await fetch(`http://localhost:5001/api/patient/profile/${userData.id}`);
+          const profileRes = await fetch(`/api/patient/profile/${userData.id}`);
           const profileData = await profileRes.json();
           if (profileData.success && profileData.profile) {
             patientProfile = profileData.profile;
@@ -1254,7 +1254,7 @@ const BookAppointment = () => {
         : '';
 
       // Initiate Khalti payment via backend
-      const initiateRes = await fetch('http://localhost:5001/api/khalti/initiate', {
+      const initiateRes = await fetch(process.env.REACT_APP_API_URL + '/api/khalti/initiate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -1534,7 +1534,7 @@ const BookAppointment = () => {
                                     <div className="avatar">
                                       {doc.profilePhoto ? (
                                         <img 
-                                          src={`http://localhost:5001/${doc.profilePhoto}`} 
+                                          src={`/${doc.profilePhoto}`} 
                                           alt={doc.name}
                                           onError={(e) => {
                                             e.target.style.display = 'none';
@@ -1593,7 +1593,7 @@ const BookAppointment = () => {
                                 <div className="avatar">
                                   {doc.profilePhoto ? (
                                     <img 
-                                      src={`http://localhost:5001/${doc.profilePhoto}`} 
+                                      src={`/${doc.profilePhoto}`} 
                                       alt={doc.name}
                                       onError={(e) => {
                                         e.target.style.display = 'none';
@@ -1749,7 +1749,7 @@ const BookAppointment = () => {
                             >
                               {photoPath ? (
                                 <img
-                                  src={`http://localhost:5001/${photoPath}`}
+                                  src={`/${photoPath}`}
                                   alt={doc.name}
                                   style={{
                                     width: '100%',
@@ -2108,7 +2108,7 @@ const BookAppointment = () => {
                       <div className="step4-doctor-avatar" style={{ margin: '0 auto 1rem auto' }}>
                         {booking.doctor?.profilePhoto ? (
                           <img 
-                            src={`http://localhost:5001/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
+                            src={`/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
                             alt={booking.doctor.name}
                             onError={(e) => {
                               e.target.style.display = 'none';
@@ -2558,7 +2558,7 @@ const BookAppointment = () => {
                         <div className="step4-doctor-avatar">
                           {booking.doctor?.profilePhoto ? (
                             <img 
-                              src={`http://localhost:5001/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
+                              src={`/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
                               alt={booking.doctor.name}
                               onError={(e) => {
                                 e.target.style.display = 'none';
@@ -2755,7 +2755,7 @@ const BookAppointment = () => {
                         <div className="step4-doctor-avatar">
                           {booking.doctor?.profilePhoto ? (
                             <img 
-                              src={`http://localhost:5001/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
+                              src={`/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
                               alt={booking.doctor.name}
                               onError={(e) => {
                                 e.target.style.display = 'none';
@@ -3201,7 +3201,7 @@ const BookAppointment = () => {
                       }
 
                       // Save dependent to backend
-                      const response = await fetch(`http://localhost:5001/api/patient/dependents/${userId}`, {
+                      const response = await fetch(`/api/patient/dependents/${userId}`, {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json',
@@ -3263,7 +3263,7 @@ const BookAppointment = () => {
               <div className="modal-doctor-photo">
                 {selectedDoctorProfile.profilePhoto ? (
                   <img 
-                    src={`http://localhost:5001/${selectedDoctorProfile.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`} 
+                    src={`/${selectedDoctorProfile.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`} 
                     alt={selectedDoctorProfile.name}
                     onError={(e) => { 
                       e.target.style.display = 'none'; 

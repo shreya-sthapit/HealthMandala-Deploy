@@ -67,7 +67,7 @@ const VerifyOTP = () => {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:5001/api/otp/send', {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/api/otp/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ const VerifyOTP = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/otp/verify', {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/api/otp/verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const VerifyOTP = () => {
       if (data.success) {
         // Phone verified — get a pending token (no User created yet)
         try {
-          const registerResponse = await fetch('http://localhost:5001/api/auth/register/phone', {
+          const registerResponse = await fetch(process.env.REACT_APP_API_URL + '/api/auth/register/phone', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ firstName, lastName, phone: userContact, password, role }),
