@@ -7,28 +7,29 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
+// Improved CORS Configuration
 app.use(cors({
-  origin: function(origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Allow localhost and local network IPs
+  origin: function (origin, callback) {
+    if (!origin) {
+      return callback(null, true);
+    }
+
     const allowedOrigins = [
+      process.env.FRONTEND_URL,
+      'https://healthmandala-frontend.vercel.app',
+      process.env.ADMIN_URL,
       'http://localhost:3000',
-      'http://localhost:3001', 
+      'http://localhost:3001',
       'http://localhost:3002',
       'http://127.0.0.1:3000',
-      'http://127.0.0.1:3001',
-      'http://127.0.0.1:3002'
-    ];
-    
-    // Allow any local network IP (192.168.x.x, 10.x.x.x, 172.16-31.x.x)
-    const localNetworkPattern = /^http:\/\/(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2[0-9]|3[0-1])\.\d{1,3}\.\d{1,3}):\d{4}$/;
-    
-    if (allowedOrigins.includes(origin) || localNetworkPattern.test(origin)) {
+      'http://127.0.0.1:3001'
+    ].filter(Boolean); // Remove null/undefined values
+
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(null, true); // Allow all origins for development
+      console.log(`❌ CORS blocked origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
