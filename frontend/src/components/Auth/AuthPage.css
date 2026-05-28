@@ -1,0 +1,760 @@
+/* ═══════════════════════════════════════════════════
+   AuthPage — Sliding overlay pattern
+   Theme: #00a896 teal
+   ═══════════════════════════════════════════════════ */
+
+.ap-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background: linear-gradient(135deg, #e8f5f3 0%, #f0fdfa 100%);
+  padding: calc(70px + 1.5rem) 5% 1.5rem;
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+}
+
+/* ── Main card ── */
+.ap-card {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  height: calc(100vh - 70px - 3rem);
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 40px rgba(0, 168, 150, 0.13);
+  overflow: hidden;
+  display: flex;
+}
+
+/* ══════════════════════════════════════════
+   FORM PANELS  (left = signin, right = signup)
+   ══════════════════════════════════════════ */
+.ap-form-panel {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 4%;
+  background: #fff;
+  overflow-y: auto;
+  /* no transition here — animations handle it */
+}
+
+/* Inner form wrapper — keeps content readable at any card width */
+.ap-form-panel > *:not(h2) {
+  width: 100%;
+  max-width: 420px;
+}
+.ap-form-panel > h2 {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ── Default (sign-in active) ── */
+.ap-signin-panel {
+  left: 0;
+  z-index: 2;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ap-signup-panel {
+  right: 0;
+  z-index: 1;
+  opacity: 0;
+  transform: translateX(60px);
+  pointer-events: none;
+  justify-content: flex-start;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+/* ── Sign-up active state ── */
+.ap-signup-active .ap-signin-panel {
+  opacity: 0;
+  transform: translateX(-60px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ap-signup-active .ap-signup-panel {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: all;
+  z-index: 2;
+}
+
+/* ── Transition: going TO signup ── */
+.ap-exit-to-signup .ap-signin-panel {
+  animation: slideOutLeft 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.ap-exit-to-signup .ap-signup-panel {
+  animation: slideInRight 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+  pointer-events: none;
+}
+
+/* ── Transition: going TO signin ── */
+.ap-exit-to-signin .ap-signup-panel {
+  animation: slideOutRight 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.ap-exit-to-signin .ap-signin-panel {
+  animation: slideInLeft 0.45s cubic-bezier(0.4, 0, 0.2, 1) 0.1s forwards;
+  pointer-events: none;
+}
+
+/* ── Keyframes ── */
+@keyframes slideOutLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-70px); }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(70px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOutRight {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(70px); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-70px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Staggered field entrance — removed, no transitions on form fields ── */
+
+/* no field animations */
+
+/* ══════════════════════════════════════════
+   OVERLAY PANEL  (the colored sliding half)
+   ══════════════════════════════════════════ */
+.ap-overlay-panel {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  z-index: 10;
+  overflow: hidden;
+  border-radius: 0 20px 20px 0;
+  transition: left 0.55s cubic-bezier(0.77, 0, 0.175, 1),
+              border-radius 0.55s ease,
+              background 0.55s ease;
+  background: #6dbc95;
+}
+
+/* When signup active — overlay slides to left half and shifts color */
+.ap-signup-active .ap-overlay-panel {
+  left: 0;
+  border-radius: 20px 0 0 20px;
+  background: #60b09c;
+}
+
+/* Also animate during exit transitions */
+.ap-exit-to-signup .ap-overlay-panel {
+  left: 0;
+  border-radius: 20px 0 0 20px;
+  background: #60b09c;
+  transition: left 0.55s cubic-bezier(0.77, 0, 0.175, 1),
+              border-radius 0.55s ease,
+              background 0.55s ease;
+}
+.ap-exit-to-signin .ap-overlay-panel {
+  left: 50%;
+  border-radius: 0 20px 20px 0;
+  background: #6dbc95;
+  transition: left 0.55s cubic-bezier(0.77, 0, 0.175, 1),
+              border-radius 0.55s ease,
+              background 0.55s ease;
+}
+
+/* No decorative circles on overlay */
+
+/* Left/right halves of the overlay content */
+.ap-overlay-left,
+.ap-overlay-right {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  color: #fff;
+  transition: opacity 0.3s ease 0.1s, transform 0.35s ease 0.1s;
+}
+
+/* Default: show right side (sign-in state → "Hello Explorer" on right) */
+.ap-overlay-left  { opacity: 0; transform: translateX(-24px); pointer-events: none; }
+.ap-overlay-right { opacity: 1; transform: translateX(0);     pointer-events: all;  }
+
+/* Signup active: show left side ("Welcome Back") */
+.ap-signup-active .ap-overlay-left  { opacity: 1; transform: translateX(0);   pointer-events: all;  }
+.ap-signup-active .ap-overlay-right { opacity: 0; transform: translateX(24px); pointer-events: none; }
+
+/* During exit transitions */
+.ap-exit-to-signup .ap-overlay-left  { opacity: 1; transform: translateX(0);   pointer-events: all;  }
+.ap-exit-to-signup .ap-overlay-right { opacity: 0; transform: translateX(24px); pointer-events: none; }
+.ap-exit-to-signin .ap-overlay-left  { opacity: 0; transform: translateX(-24px); pointer-events: none; }
+.ap-exit-to-signin .ap-overlay-right { opacity: 1; transform: translateX(0);    pointer-events: all;  }
+
+.ap-overlay-left h2,
+.ap-overlay-right h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.ap-overlay-left p,
+.ap-overlay-right p {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.6;
+  max-width: 220px;
+  margin-bottom: 1.75rem;
+}
+
+/* Overlay button — outlined white */
+.ap-overlay-btn {
+  padding: 0.65rem 2.2rem;
+  background: transparent;
+  border: 2px solid #fff;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+}
+.ap-overlay-btn:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+/* ══════════════════════════════════════════
+   FORM ELEMENTS
+   ══════════════════════════════════════════ */
+.ap-form-panel h2 {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+
+/* Email / Phone method toggle */
+.ap-method-toggle {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+}
+.ap-method-toggle button {
+  flex: 1;
+  padding: 0.45rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.22s;
+}
+.ap-method-toggle button.active {
+  background: #fff;
+  color: #6dbc95;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Sign-up panel active toggle uses sign-up color */
+.ap-signup-panel .ap-method-toggle button.active {
+  color: #60b09c;
+}
+
+/* Sign-up panel forgot link */
+.ap-signup-panel .ap-forgot a { color: #60b09c; }
+
+/* Inputs */
+.ap-input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  background: #fff;
+  color: #1e293b;
+  margin-bottom: 0.7rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.ap-input:focus {
+  outline: none;
+  border-color: #6dbc95;
+  box-shadow: 0 0 0 3px rgba(109,188,149,0.15);
+  background: #fff;
+}
+
+/* Sign-up panel inputs use sign-up color */
+.ap-signup-panel .ap-input:focus {
+  border-color: #60b09c;
+  box-shadow: 0 0 0 3px rgba(96,176,156,0.15);
+}
+.ap-input::placeholder { color: #b0bec5; }
+
+/* Two-column row */
+.ap-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  overflow: visible;
+}
+
+/* Phone row */
+.ap-phone-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+.ap-phone-row .ap-input { margin-bottom: 0; flex: 1; }
+.ap-cc {
+  padding: 0.7rem 0.6rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  background: #f1f5f9;
+  color: #1e293b;
+  font-weight: 600;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+
+/* Password wrapper */
+.ap-pwd-wrap {
+  position: relative;
+  margin-bottom: 0.7rem;
+}
+.ap-pwd-wrap .ap-input { margin-bottom: 0; padding-right: 3rem; }
+.ap-eye {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
+}
+.ap-eye:hover { color: #64748b; }
+
+/* Forgot */
+.ap-forgot {
+  text-align: right;
+  margin-bottom: 0.6rem;
+}
+.ap-forgot a {
+  font-size: 0.78rem;
+  color: #6dbc95;
+  text-decoration: none;
+  font-weight: 600;
+}
+.ap-forgot a:hover { text-decoration: underline; }
+
+/* Error */
+.ap-error {
+  font-size: 0.8rem;
+  color: #dc2626;
+  background: #fef2f2;
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  margin-bottom: 0.6rem;
+  text-align: center;
+}
+
+/* Submit — sign-in uses #6dbc95, sign-up uses #60b09c */
+.ap-submit {
+  width: 100%;
+  padding: 0.78rem;
+  background: #6dbc95;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.15s;
+  box-shadow: 0 4px 14px rgba(109,188,149,0.35);
+  margin-top: 0.2rem;
+}
+.ap-submit:hover { background: #5aaa82; transform: translateY(-1px); }
+.ap-submit:active { transform: translateY(0); }
+.ap-submit:disabled { background: #b2d8c8; box-shadow: none; cursor: not-allowed; transform: none; }
+
+/* Sign-up panel submit uses the sign-up panel color */
+.ap-signup-panel .ap-submit {
+  background: #60b09c;
+  box-shadow: 0 4px 14px rgba(96,176,156,0.35);
+}
+.ap-signup-panel .ap-submit:hover { background: #4e9d8a; }
+
+/* ── Popup ── */
+.ap-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(3px);
+}
+.ap-popup {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+}
+.ap-popup-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #d1fae5;
+  color: #059669;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+.ap-popup h3 { font-size: 1.3rem; color: #1e293b; margin-bottom: 0.6rem; }
+.ap-popup p  { color: #64748b; font-size: 0.88rem; margin-bottom: 0.4rem; }
+.ap-popup-note { font-size: 0.82rem; line-height: 1.5; margin-top: 0.5rem !important; }
+.ap-popup-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: #6dbc95;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1.25rem;
+  transition: background 0.22s;
+  box-shadow: 0 4px 14px rgba(109,188,149,0.3);
+}
+.ap-popup-btn:hover { background: #5aaa82; }
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .ap-card {
+    flex-direction: column;
+    min-height: auto;
+    border-radius: 16px;
+  }
+  .ap-overlay-panel {
+    position: relative;
+    left: 0 !important;
+    width: 100%;
+    min-height: 180px;
+    border-radius: 16px 16px 0 0 !important;
+  }
+  .ap-form-panel {
+    position: relative;
+    width: 100%;
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+    padding: 2rem 1.5rem;
+  }
+  .ap-signin-panel  { display: block; }
+  .ap-signup-panel  { display: none; }
+  .ap-signup-active .ap-signin-panel { display: none; }
+  .ap-signup-active .ap-signup-panel { display: flex; }
+  .ap-row { grid-template-columns: 1fr; }
+}
+
+/* Role redirect link */
+.ap-role-link {
+  text-align: center;
+  margin-top: 0.9rem;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+.ap-role-link a {
+  font-weight: 700;
+  text-decoration: none;
+  color: #6dbc95;
+}
+.ap-signup-panel .ap-role-link a { color: #60b09c; }
+.ap-role-link a:hover { text-decoration: underline; }
+
+/* end of AuthPage.css */
+
+/* ── Select dropdown styling ── */
+.ap-input[value=""],
+select.ap-input:invalid {
+  color: #b0bec5;
+}
+
+select.ap-input {
+  color: #1e293b;
+  padding-right: 2.2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+select.ap-input option[value=""] {
+  color: #b0bec5;
+}
+
+select.ap-input option {
+  color: #1e293b;
+}
+
+/* ── Floating label input ── */
+.ap-float {
+  position: relative;
+  margin-bottom: 0.7rem;
+}
+
+.ap-float input,
+.ap-float select {
+  width: 100%;
+  padding: 1.45rem 1rem 0.45rem;
+  min-height: 3.2rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  background: #fff;
+  color: #1e293b;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.ap-float input:focus,
+.ap-float select:focus {
+  border-color: #6dbc95;
+  box-shadow: 0 0 0 3px rgba(109,188,149,0.15);
+}
+
+.ap-float label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.88rem;
+  color: #b0bec5;
+  pointer-events: none;
+  transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  background: transparent;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+/* Float up when focused or has value */
+.ap-float input:focus ~ label,
+.ap-float input:not(:placeholder-shown) ~ label,
+.ap-float select:focus ~ label,
+.ap-float.has-value label {
+  top: 0.5rem;
+  transform: translateY(0);
+  font-size: 0.68rem;
+  color: #6dbc95;
+  font-weight: 600;
+}
+
+/* Password wrapper with floating label */
+.ap-float .ap-eye {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
+}
+.ap-float .ap-eye:hover { color: #64748b; }
+
+.ap-float input[type="password"],
+.ap-float input[type="text"].has-eye {
+  padding-right: 3rem;
+}
+
+/* Select inside float */
+.ap-float select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  padding-right: 2.2rem;
+  cursor: pointer;
+}
+
+
+/* ── Multi-select (Currently Working At) ── */
+
+/* ── Multi-select (Currently Working At) — matches ap-float style ── */
+
+/* ── Multi-select — exactly matches ap-float field style ── */
+
+/* ── Multi-select — pixel-perfect match to ap-float select ── */
+.ap-multiselect-wrap {
+  position: relative;
+  margin-bottom: 0.7rem;
+}
+
+.ap-multiselect-trigger {
+  width: 100%;
+  /* Same padding as ap-float input/select */
+  padding: 1.45rem 2.2rem 0.45rem 1rem;
+  min-height: 3.2rem;  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  background: #fff;
+  /* Same arrow as ap-float select */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  color: #1e293b;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  user-select: none;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.ap-multiselect-trigger:hover,
+.ap-multiselect-trigger:focus-within {
+  border-color: #6dbc95;
+  box-shadow: 0 0 0 3px rgba(109,188,149,0.15);
+  outline: none;
+}
+
+/* Floating label — identical to ap-float label */
+.ap-multiselect-wrap > label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.88rem;
+  color: #b0bec5;
+  pointer-events: none;
+  transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  background: transparent;
+  padding: 0 2px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ap-multiselect-trigger.has-value ~ label {
+  top: 0.5rem;
+  transform: translateY(0);
+  font-size: 0.68rem;
+  color: #6dbc95;
+  font-weight: 600;
+}
+
+/* Horizontally scrollable tags — constrained to not expand height */
+.ap-multiselect-tags {
+  display: flex;
+  gap: 0.3rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex: 1;
+  align-items: center;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-top: 0;
+  max-height: 1.4rem;
+}
+.ap-multiselect-tags::-webkit-scrollbar { display: none; }
+
+.ap-multiselect-tag {
+  display: inline-flex;
+  align-items: center;
+  background: #e6f7f3;
+  color: #059669;
+  border-radius: 20px;
+  padding: 0 0.45rem;
+  font-size: 0.76rem;
+  font-weight: 400;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.4rem;
+}
+
+/* Dropdown */
+.ap-multiselect-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  z-index: 9999;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 0.4rem 0;
+}
+
+.ap-multiselect-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: #374151;
+  transition: background 0.15s;
+}
+.ap-multiselect-option:hover { background: #f0fdf4; color: #059669; }
+
+.ap-multiselect-option input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: #6dbc95;
+  cursor: pointer;
+  flex-shrink: 0;
+}

@@ -1,0 +1,232 @@
+.presc-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.presc-modal {
+  background: var(--white);
+  border-radius: 15px;
+  width: 100%;
+  max-width: 860px;
+  max-height: 88vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  animation: fadeUp 0.25s ease-out;
+}
+
+@keyframes fadeUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.presc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #f0f0f0;
+  background: var(--light-bg);
+}
+
+.presc-header h2 {
+  font-size: 1.4rem;
+  color: var(--text-dark);
+  margin-bottom: 0.25rem;
+}
+
+.presc-header p {
+  color: var(--primary-color);
+  font-size: 0.9rem;
+}
+
+.presc-close {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: var(--text-light);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.presc-close:hover { background: #e0e0e0; }
+
+.presc-body {
+  flex: 1;
+  overflow: hidden;
+  padding: 1.5rem 2rem;
+}
+
+.presc-loading, .presc-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-light);
+}
+
+.presc-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  height: calc(88vh - 130px);
+}
+
+/* Left list */
+.presc-list {
+  overflow-y: auto;
+  border-right: 1px solid #f0f0f0;
+  padding-right: 1rem;
+}
+
+.presc-list h3 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  margin-bottom: 1rem;
+}
+
+.presc-list-item {
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  margin-bottom: 0.5rem;
+  transition: all 0.2s;
+}
+
+.presc-list-item:hover { background: var(--light-bg); }
+
+.presc-list-item.active {
+  border-color: var(--primary-color);
+  background: rgba(0,168,150,0.07);
+}
+
+.presc-list-date {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.presc-list-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.presc-list-info strong {
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+.presc-list-info span {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+/* Right detail */
+.presc-detail {
+  overflow-y: auto;
+  padding-left: 0.5rem;
+}
+
+.presc-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.presc-detail-header h3 {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+}
+
+.presc-detail-date {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  background: var(--light-bg);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+}
+
+.presc-section {
+  margin-bottom: 1.5rem;
+}
+
+.presc-section label {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.presc-section p {
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.presc-medicines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.presc-medicine-row {
+  background: var(--light-bg);
+  border-left: 3px solid var(--primary-color);
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+}
+
+.med-name {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.25rem;
+}
+
+.med-dosage {
+  font-weight: 400;
+  color: var(--primary-color);
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.med-info {
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.med-instruction {
+  color: var(--primary-color);
+  font-style: italic;
+}
+
+.presc-tests {
+  padding-left: 1.2rem;
+  color: var(--text-dark);
+  font-size: 0.95rem;
+}
+
+.presc-tests li { margin-bottom: 0.4rem; }
+
+@media (max-width: 640px) {
+  .presc-layout { grid-template-columns: 1fr; }
+  .presc-list { border-right: none; border-bottom: 1px solid #f0f0f0; padding-bottom: 1rem; }
+}

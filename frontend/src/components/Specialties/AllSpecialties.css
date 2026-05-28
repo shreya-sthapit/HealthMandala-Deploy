@@ -1,0 +1,289 @@
+.all-specialties-page {
+  min-height: 100vh;
+  background: #f8fafb;
+  padding: 6rem 0 2rem 0;
+}
+
+.all-specialties-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Booking Stepper */
+.booking-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem calc(5% + 2rem);
+  margin: 0 0 2rem 0;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  width: 100%;
+}
+
+.stepper-step {
+  display: flex;
+  align-items: center;
+}
+
+.stepper-step.active .step-title {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.stepper-step.active .step-desc {
+  color: #1a2e35;
+  font-weight: 600;
+}
+
+.step-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  align-items: center;
+  text-align: center;
+}
+
+.step-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #a8c5c9;
+  letter-spacing: 0.05em;
+}
+
+.step-desc {
+  font-size: 0.85rem;
+  color: #6b8f95;
+  font-weight: 500;
+}
+
+.stepper-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  margin: 0 1rem;
+  max-width: 120px;
+}
+
+.all-specialties-header {
+  margin-bottom: 2rem;
+  padding: 0 5%;
+}
+
+.all-specialties-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a2e35;
+  margin: 0 0 0.5rem 0;
+}
+
+.date-text {
+  font-size: 0.9rem;
+  color: #a8c5c9;
+  margin: 0;
+}
+
+.all-specialties-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0 5%;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.search-box svg {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #cbd5e0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+  background: white;
+  color: #1a2e35;
+}
+
+.search-box input::placeholder {
+  color: #cbd5e0;
+}
+
+.search-box input:focus {
+  border-color: #00a896;
+  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.1);
+}
+
+.specialty-count-badge {
+  padding: 0.5rem 1.25rem;
+  background: #f0f4f5;
+  color: #6b8f95;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.specialties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  padding: 0 5%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.specialty-card {
+  background: white;
+  border: 1.5px solid #e8f0f2;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.specialty-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 168, 150, 0.12);
+  border-color: #00a896;
+}
+
+.specialty-icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e0f7f4, #b2ece6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  font-size: 2.5rem;
+}
+
+.specialty-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a2e35;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.02em;
+}
+
+.specialty-description {
+  font-size: 0.85rem;
+  color: #a8c5c9;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.doctor-count {
+  font-size: 0.95rem;
+  color: #00a896;
+  font-weight: 600;
+  margin: 0 0 1.25rem 0;
+}
+
+.consult-btn-specialty {
+  display: inline-block;
+  padding: 0.65rem 1.75rem;
+  background: #00a896;
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.consult-btn-specialty:hover {
+  background: #008c7a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 168, 150, 0.3);
+}
+
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #a8c5c9;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 1200px) {
+  .booking-stepper {
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding: 1.5rem calc(5% + 1.5rem);
+  }
+  
+  .stepper-line {
+    width: 40px;
+  }
+  
+  .step-label {
+    min-width: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .all-specialties-container {
+    padding: 0 1rem;
+  }
+
+  .all-specialties-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .specialties-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .all-specialties-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+  
+  .booking-stepper {
+    padding: 1rem calc(5% + 1rem);
+  }
+  
+  .step-title {
+    font-size: 0.6rem;
+  }
+  
+  .step-desc {
+    font-size: 0.7rem;
+  }
+  
+  .stepper-line {
+    width: 20px;
+    margin: 0 0.25rem;
+  }
+}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HealthMandala – Project Gantt Chart</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; padding: 2rem; }
+  h1 { font-size: 1.6rem; font-weight: 800; color: #00a896; margin-bottom: 0.25rem; }
+  .subtitle { font-size: 0.9rem; color: #64748b; margin-bottom: 2rem; }
+
+  .gantt { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .gantt th { background: #00a896; color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; white-space: nowrap; }
+  .gantt th.week { text-align: center; font-size: 0.75rem; min-width: 36px; }
+  .gantt tr:nth-child(even) td { background: #f0fdfa; }
+  .gantt tr:nth-child(odd) td { background: #ffffff; }
+  .gantt td { padding: 0.4rem 0.75rem; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+  .gantt td.task-name { font-weight: 600; white-space: nowrap; min-width: 220px; }
+  .gantt td.phase { color: #64748b; font-size: 0.75rem; white-space: nowrap; }
+  .gantt td.week-cell { text-align: center; padding: 0.4rem 2px; }
+
+  .bar {
+    display: inline-block;
+    height: 18px;
+    border-radius: 4px;
+    width: 100%;
+  }
+  .done   { background: #00a896; }
+  .infra  { background: #0284c7; }
+  .auth   { background: #7c3aed; }
+  .feat   { background: #d97706; }
+  .ui     { background: #db2777; }
+
+  .legend { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; }
+  .legend-dot { width: 14px; height: 14px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<h1>HealthMandala – Development Gantt Chart</h1>
+<p class="subtitle">MERN Stack Appointment Booking Application &nbsp;|&nbsp; Dec 2025 – Apr 2026</p>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#00a896"></div> Core Features</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#0284c7"></div> Infrastructure / Backend</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div> Authentication</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div> Dashboards & Booking</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#db2877"></div> UI / UX Refinement</div>
+</div>
+
+<table class="gantt">
+  <thead>
+    <tr>
+      <th>Task</th>
+      <th>Phase</th>
+      <!-- Weeks: W1=Dec1, W2=Dec8 ... W18=Apr6 -->
+      <th class="week">W1</th><th class="week">W2</th><th class="week">W3</th><th class="week">W4</th>
+      <th class="week">W5</th><th class="week">W6</th><th class="week">W7</th><th class="week">W8</th>
+      <th class="week">W9</th><th class="week">W10</th><th class="week">W11</th><th class="week">W12</th>
+      <th class="week">W13</th><th class="week">W14</th><th class="week">W15</th><th class="week">W16</th>
+      <th class="week">W17</th><th class="week">W18</th>
+    </tr>
+    <tr style="background:#e8f5f3; font-size:0.7rem; color:#64748b;">
+      <td colspan="2" style="padding:0.25rem 0.75rem;">Month →</td>
+      <td colspan="4" style="text-align:center; font-weight:600;">December 2025</td>
+      <td colspan="4" style="text-align:center; font-weight:600;">January 2026</td>
+      <td colspan="4" style="text-align:center; font-weight:600;">February 2026</td>
+      <td colspan="4" style="text-align:center; font-weight:600;">March 2026</td>
+      <td colspan="2" style="text-align:center; font-weight:600;">April</td>
+    </tr>
+  </thead>
+  <tbody>
+
+  <!-- INFRASTRUCTURE -->
+  <tr>
+    <td class="task-name">Project Setup (React + Node)</td>
+    <td class="phase">Infrastructure</td>
+    <td class="week-cell"><div class="bar infra"></div></td>
+    <td class="week-cell"><div class="bar infra"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">MongoDB + Express API Setup</td>
+    <td class="phase">Infrastructure</td>
+    <td class="week-cell"><div class="bar infra"></div></td>
+    <td class="week-cell"><div class="bar infra"></div></td>
+    <td class="week-cell"><div class="bar infra"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+
+  <!-- AUTHENTICATION -->
+  <tr>
+    <td class="task-name">Firebase Email Auth</td>
+    <td class="phase">Authentication</td>
+    <td></td>
+    <td class="week-cell"><div class="bar auth"></div></td>
+    <td class="week-cell"><div class="bar auth"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Twilio Phone OTP Auth</td>
+    <td class="phase">Authentication</td>
+    <td></td><td></td>
+    <td class="week-cell"><div class="bar auth"></div></td>
+    <td class="week-cell"><div class="bar auth"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Role-based Login / Signup</td>
+    <td class="phase">Authentication</td>
+    <td></td><td></td>
+    <td class="week-cell"><div class="bar auth"></div></td>
+    <td class="week-cell"><div class="bar auth"></div></td>
+    <td class="week-cell"><div class="bar auth"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+
+  <!-- REGISTRATION -->
+  <tr>
+    <td class="task-name">Patient Multi-step Registration</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Doctor Multi-step Registration</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+
+  <!-- DASHBOARDS -->
+  <tr>
+    <td class="task-name">Admin Dashboard</td>
+    <td class="phase">Dashboards</td>
+    <td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar feat"></div></td>
+    <td class="week-cell"><div class="bar feat"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Patient Dashboard (Home)</td>
+    <td class="phase">Dashboards</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar feat"></div></td>
+    <td class="week-cell"><div class="bar feat"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Doctor Dashboard</td>
+    <td class="phase">Dashboards</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar feat"></div></td>
+    <td class="week-cell"><div class="bar feat"></div></td>
+    <td class="week-cell"><div class="bar feat"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+
+  <!-- BOOKING -->
+  <tr>
+    <td class="task-name">Appointment Booking System</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">eSewa Payment Integration</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Doctor Availability / Schedule</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Appointment Approval Workflow</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td>
+  </tr>
+
+  <!-- FEATURES -->
+  <tr>
+    <td class="task-name">Find Doctors Page</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Hospital Appointments Page</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Appointment Card (QR)</td>
+    <td class="phase">Core Features</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td class="week-cell"><div class="bar done"></div></td>
+    <td></td><td></td><td></td><td></td>
+  </tr>
+
+  <!-- UI/UX -->
+  <tr>
+    <td class="task-name">Landing Page Design</td>
+    <td class="phase">UI / UX</td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td></td><td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Login / Signup UI Redesign</td>
+    <td class="phase">UI / UX</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td class="task-name">Global Navbar & Routing</td>
+    <td class="phase">UI / UX</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+    <td class="week-cell"><div class="bar ui"></div></td>
+  </tr>
+  <tr>
+    <td class="task-name">Testing & Bug Fixes</td>
+    <td class="phase">QA</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    <td class="week-cell"><div class="bar infra"></div></td>
+    <td class="week-cell"><div class="bar infra"></div></td>
+    <td class="week-cell"><div class="bar infra"></div></td>
+  </tr>
+
+  </tbody>
+</table>
+
+<p style="margin-top:1.5rem; font-size:0.75rem; color:#94a3b8;">
+  W1 = Dec 1, 2025 &nbsp;|&nbsp; W18 = Apr 7, 2026 &nbsp;|&nbsp; Each column = 1 week
+</p>
+
+</body>
+</html>

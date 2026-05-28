@@ -1,0 +1,342 @@
+/* ── Single-page patient registration form ── */
+
+.prf-page {
+  min-height: calc(100vh - 70px);
+  background: #f8fafc;
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+}
+
+.prf-card {
+  padding: 2rem 3%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ── Full-width form panel ── */
+.prf-right {
+  flex: 1;
+  background: #fff;
+  padding: 0;
+}
+
+.prf-form-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Override prl-form-wrapper max-width when nested inside prf-form-wrapper */
+.prf-form-wrapper .prl-form-wrapper {
+  max-width: 100%;
+  padding: 0;
+  width: auto;
+}
+
+/* Make prl-float, prl-row etc. work as direct children of prf-form-wrapper */
+.prf-form-wrapper .prl-float {
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.prf-form-wrapper .prl-float input,
+.prf-form-wrapper .prl-float select,
+.prf-form-wrapper .prl-float textarea {
+  width: 100%;
+  padding: 1.45rem 1rem 0.45rem;
+  min-height: 3.2rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  background: #fff;
+  color: #1e293b;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'Segoe UI', sans-serif;
+  margin-bottom: 0;
+}
+
+.prf-form-wrapper .prl-float input:focus,
+.prf-form-wrapper .prl-float select:focus,
+.prf-form-wrapper .prl-float textarea:focus {
+  border-color: #6dbc95;
+  box-shadow: 0 0 0 3px rgba(109, 188, 149, 0.15);
+}
+
+.prf-form-wrapper .prl-float input::placeholder,
+.prf-form-wrapper .prl-float textarea::placeholder { color: transparent; }
+
+.prf-form-wrapper .prl-float label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.88rem;
+  color: #b0bec5;
+  pointer-events: none;
+  transition: top 0.18s ease, font-size 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  line-height: 1;
+}
+
+.prf-form-wrapper .prl-float textarea ~ label {
+  top: 1.1rem;
+  transform: none;
+}
+
+.prf-form-wrapper .prl-float input:focus ~ label,
+.prf-form-wrapper .prl-float input:not(:placeholder-shown) ~ label,
+.prf-form-wrapper .prl-float select:focus ~ label,
+.prf-form-wrapper .prl-float.has-value label,
+.prf-form-wrapper .prl-float textarea:focus ~ label,
+.prf-form-wrapper .prl-float textarea:not(:placeholder-shown) ~ label {
+  top: 0.5rem;
+  transform: translateY(0);
+  font-size: 0.68rem;
+  color: #6dbc95;
+  font-weight: 600;
+}
+
+.prf-form-wrapper .prl-float select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px;
+  padding-right: 2.2rem;
+  cursor: pointer;
+}
+
+.prf-form-wrapper .prl-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.prf-form-wrapper .prl-phone-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prf-form-wrapper .prl-phone-row .prl-cc {
+  padding: 0.7rem 0.6rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  background: #f1f5f9;
+  color: #1e293b;
+  font-weight: 600;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  min-height: 3.2rem;
+}
+
+.prf-form-wrapper .prl-phone-row .prl-float {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.prf-form-wrapper .upload-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.prf-form-wrapper .upload-area {
+  border: 1.5px dashed #d1d5db;
+  border-radius: 10px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #f8fffe;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.prf-form-wrapper .upload-area:hover { border-color: #6dbc95; background: #f0fdfa; }
+
+.prf-form-wrapper .image-preview {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 16/10;
+}
+
+.prf-form-wrapper .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+.prf-form-wrapper .remove-btn {
+  position: absolute; top: 5px; right: 5px;
+  width: 22px; height: 22px;
+  background: #dc2626; color: #fff;
+  border: none; border-radius: 50%;
+  cursor: pointer; font-size: 0.75rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.prf-form-wrapper .info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.7rem 0.9rem;
+  background: #f0fdfa;
+  border-radius: 10px;
+  border-left: 3px solid #6dbc95;
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.prf-form-wrapper .profile-upload-area {
+  width: 100px;
+  height: 100px;
+  border: 1.5px dashed #d1d5db;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #f8fffe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.prf-form-wrapper .profile-upload-area:hover { border-color: #6dbc95; background: #f0fdfa; }
+
+.prf-form-wrapper .profile-preview {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.prf-form-wrapper .profile-preview img { width: 100%; height: 100%; object-fit: cover; }
+.prf-form-wrapper .profile-preview .remove-btn { top: 2px; right: 2px; }
+
+@media (max-width: 500px) {
+  .prf-form-wrapper .prl-row { grid-template-columns: 1fr; }
+  .prf-form-wrapper .upload-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Page header row ── */
+.prf-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.prf-page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.3rem;
+  text-align: left;
+}
+
+.prf-page-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+  text-align: left;
+}
+
+/* ── Section headers ── */
+.prf-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 1.75rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e8f5f3;
+}
+
+.prf-section-header:first-of-type {
+  margin-top: 0.5rem;
+}
+
+.prf-optional {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #94a3b8;
+  margin-left: 0.25rem;
+}
+
+/* ── Submit button ── */
+.prf-submit-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #6dbc95;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.15s;
+  box-shadow: 0 4px 14px rgba(109, 188, 149, 0.35);
+  letter-spacing: 0.05em;
+  margin-top: 1.5rem;
+}
+
+.prf-submit-btn:hover {
+  background: #5aaa82;
+  transform: translateY(-1px);
+}
+
+.prf-submit-btn:active {
+  transform: translateY(0);
+}
+
+.prf-submit-btn:disabled {
+  background: #b2d8c8;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Error message ── */
+.prf-form-wrapper .error-message {
+  color: #dc2626;
+  font-size: 0.82rem;
+  background: #fef2f2;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .prf-page {
+    padding: calc(70px + 1rem) 4% 2rem;
+  }
+}
+
+
+/* ── NID verification spinner ── */
+@keyframes nid-spin {
+  to { transform: rotate(360deg); }
+}
+
+.nid-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: nid-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}

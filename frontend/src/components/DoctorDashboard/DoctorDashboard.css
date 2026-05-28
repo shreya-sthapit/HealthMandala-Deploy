@@ -1,0 +1,1214 @@
+/* ============================================================
+   DOCTOR DASHBOARD — Full redesign
+   White background, left sidebar + split-screen live queue
+   ============================================================ */
+
+/* ── Header bar (matches hospital dashboard) ────────────── */
+.dd-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2f0ef;
+  box-shadow: 0 2px 12px rgba(0, 168, 150, 0.06);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  z-index: 300;
+}
+
+.dd-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dd-header-logo-img {
+  height: 36px;
+  width: auto;
+}
+
+.dd-header-logo-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00c9b1, #0284c7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Profile view inside dashboard (overrides standalone dp-page padding) ── */
+.dd-view-content .dp-content {
+  padding: 1.25rem 2rem;
+}
+
+/* ── Header profile dropdown ────────────────────────────── */
+.dd-header-profile {
+  margin-left: auto;
+  position: relative;
+}
+
+.dd-profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem 0.6rem;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+.dd-profile-trigger:hover {
+  background: #f0faf9;
+}
+
+.dd-profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c9b1, #0284c7);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dd-profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.dd-profile-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1a2e35;
+}
+
+.dd-profile-spec {
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.dd-profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  min-width: 200px;
+  padding: 0.4rem;
+  z-index: 400;
+  animation: dd-dropdown-in 0.15s ease;
+}
+
+@keyframes dd-dropdown-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dd-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #374151;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+.dd-dropdown-item:hover {
+  background: #f0faf9;
+  color: #00a896;
+}
+.dd-dropdown-item svg {
+  flex-shrink: 0;
+  color: #64748b;
+}
+.dd-dropdown-item:hover svg {
+  color: #00a896;
+}
+
+.dd-dropdown-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 0.3rem 0.5rem;
+}
+
+.dd-dropdown-logout {
+  color: #dc2626;
+}
+.dd-dropdown-logout:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.dd-dropdown-logout svg,
+.dd-dropdown-logout:hover svg {
+  color: #dc2626;
+}
+
+/* ── Shell ─────────────────────────────────────────────────── */
+.dd-shell {
+  min-height: 100vh;
+  padding-top: 56px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────── */
+.dd-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  gap: 1rem;
+  position: sticky;
+  top: 56px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+/* Doctor card */
+.dd-sidebar-doctor {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #f0fdf4;
+  border-radius: 14px;
+  border: 1px solid #bbf7d0;
+}
+
+.dd-sidebar-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary-color, #00a896), #02c39a);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dd-sidebar-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dd-sidebar-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dd-sidebar-spec {
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Today badge */
+.dd-today-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.9rem;
+  background: #eff6ff;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1d4ed8;
+}
+
+.dd-today-badge svg {
+  flex-shrink: 0;
+}
+
+/* Nav */
+.dd-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.dd-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s;
+  font-family: inherit;
+  width: 100%;
+}
+
+.dd-nav-item:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.dd-nav-item.active {
+  background: var(--primary-color, #00a896);
+  color: #fff;
+  font-weight: 600;
+}
+
+.dd-nav-item.active svg {
+  stroke: #fff;
+}
+
+/* Logout */
+.dd-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #dc2626;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s;
+  font-family: inherit;
+  width: 100%;
+  margin-top: auto;
+}
+
+.dd-logout-btn:hover {
+  background: #fee2e2;
+}
+
+/* ── Main ───────────────────────────────────────────────────── */
+.dd-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Top bar */
+.dd-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dd-topbar-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.dd-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.dd-topbar-date {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+/* View content */
+.dd-view-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Live Queue Workspace ───────────────────────────────────── */
+.dd-queue-workspace {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  height: calc(100vh - 56px - 57px); /* header + topbar */
+  overflow: hidden;
+}
+
+/* Queue column */
+.dd-queue-col {
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-left: 2rem;
+}
+
+.dd-queue-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem 1rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dd-queue-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.2rem;
+}
+
+.dd-queue-sub {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.dd-queue-date {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.dd-queue-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem 0.75rem 0.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dd-queue-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.dd-queue-empty p {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0;
+}
+
+.dd-queue-empty span {
+  font-size: 0.8rem;
+}
+
+/* Queue item */
+.dd-queue-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1.5px solid #f1f5f9;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: #fff;
+}
+
+.dd-queue-item:hover:not(.done) {
+  border-color: var(--primary-color, #00a896);
+  background: #f0fdf4;
+}
+
+.dd-queue-item.selected {
+  border-color: var(--primary-color, #00a896);
+  background: #f0fdf4;
+  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.1);
+}
+
+.dd-queue-item.done {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.dd-qi-token {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dd-qi-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.dd-qi-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dd-qi-reason {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dd-qi-right {
+  flex-shrink: 0;
+}
+
+.dd-qi-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dd-qi-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dd-qi-done {
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Consultation Pad ───────────────────────────────────────── */
+.dd-pad-col {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: #f8fafc;
+}
+
+.dd-pad-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.dd-pad-empty-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.dd-pad-empty h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0;
+}
+
+.dd-pad-empty p {
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+/* Patient header */
+.dd-pad-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  gap: 1rem;
+}
+
+.dd-pad-patient {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.dd-pad-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary-color, #00a896), #02c39a);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dd-pad-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.dd-pad-meta {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 0.15rem;
+}
+
+.dd-history-btn {
+  padding: 0.55rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s;
+  font-family: inherit;
+}
+
+.dd-history-btn:hover {
+  border-color: var(--primary-color, #00a896);
+  color: var(--primary-color, #00a896);
+}
+
+/* Vitals strip */
+.dd-vitals-strip {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #fffbeb;
+  border-bottom: 1px solid #fde68a;
+  flex-wrap: wrap;
+}
+
+.dd-vitals-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.dd-vitals-items {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.dd-vitals-items span {
+  font-size: 0.82rem;
+  color: #78350f;
+  font-weight: 500;
+}
+
+/* Pad blocks */
+.dd-pad-block {
+  margin: 1rem 1.5rem 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dd-block-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dd-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #1e293b;
+  resize: vertical;
+  transition: border-color 0.18s;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.dd-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color, #00a896);
+  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.08);
+}
+
+.dd-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #1e293b;
+  transition: border-color 0.18s;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.dd-input:focus {
+  outline: none;
+  border-color: var(--primary-color, #00a896);
+  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.08);
+}
+
+/* Rx table */
+.dd-rx-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  overflow: visible;
+}
+
+.dd-rx-head {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr 36px;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-radius: 10px 10px 0 0;
+}
+
+.dd-rx-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1.5fr 36px;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+}
+
+.dd-rx-input {
+  padding: 0.5rem 0.6rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: #1e293b;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.dd-rx-input:focus {
+  outline: none;
+  border-color: var(--primary-color, #00a896);
+}
+
+.dd-rx-select {
+  padding: 0.5rem 0.4rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  color: #1e293b;
+  background: #fff;
+  width: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.dd-rx-select:focus {
+  outline: none;
+  border-color: var(--primary-color, #00a896);
+}
+
+.dd-rx-del {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.dd-rx-del:hover:not(:disabled) {
+  background: #fecaca;
+}
+
+.dd-rx-del:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.dd-add-med-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1rem;
+  border: 1.5px dashed #b2ece6;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--primary-color, #00a896);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+  align-self: flex-start;
+}
+
+.dd-add-med-btn:hover {
+  background: #f0fdf4;
+  border-color: var(--primary-color, #00a896);
+}
+
+/* Follow-up row */
+.dd-followup-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.dd-followup-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.dd-date-input {
+  width: auto;
+  flex: 1;
+}
+
+/* Pad footer */
+.dd-pad-footer {
+  padding: 1.25rem 1.5rem 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dd-submit-btn {
+  padding: 0.85rem 2.5rem;
+  background: var(--primary-color, #00a896);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+  letter-spacing: 0.2px;
+}
+
+.dd-submit-btn:hover:not(:disabled) {
+  background: #008f7e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 168, 150, 0.3);
+}
+
+.dd-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Spinner ────────────────────────────────────────────────── */
+.dd-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e2e8f0;
+  border-top-color: var(--primary-color, #00a896);
+  border-radius: 50%;
+  animation: dd-spin 0.8s linear infinite;
+}
+
+@keyframes dd-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Embedded views (Schedule / Patients) ───────────────────── */
+.dd-embedded-view {
+  height: calc(100vh - 56px - 57px);
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+}
+
+/* Override sub-page wrappers when embedded */
+.dd-embedded-view .doctor-schedule,
+.dd-embedded-view .doctor-patients {
+  min-height: unset;
+  background: transparent;
+  padding-top: 0;
+}
+
+.dd-embedded-view .schedule-content,
+.dd-embedded-view .patients-content {
+  padding: 0;
+  max-width: unset;
+  margin: 0;
+}
+
+.dd-embedded-view .page-header,
+.dd-embedded-view .top-navbar {
+  display: none;
+}
+
+/* Empty and loading states fill the full embedded content width */
+.dd-embedded-view .empty-state,
+.dd-embedded-view .patients-empty-state,
+.dd-embedded-view .loading-state {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Settings view ──────────────────────────────────────────── */
+.dd-settings-view {
+  padding: 2rem;
+}
+
+.dd-settings-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1.5rem;
+  max-width: 480px;
+}
+
+.dd-settings-card h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 1rem;
+}
+
+/* Action buttons list */
+.dd-settings-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dd-settings-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s;
+  font-family: inherit;
+}
+
+.dd-settings-action-btn:hover {
+  background: #f0fdf4;
+  border-color: var(--primary-color, #00a896);
+  color: var(--primary-color, #00a896);
+}
+
+.dd-settings-action-btn svg {
+  flex-shrink: 0;
+  color: #64748b;
+}
+
+.dd-settings-action-btn:hover svg {
+  color: var(--primary-color, #00a896);
+}
+
+/* Push the chevron to the far right */
+.dd-settings-action-btn span {
+  flex: 1;
+}
+
+/* ── Change Password Modal ──────────────────────────────────── */
+.dd-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+}
+
+.dd-modal {
+  background: #fff;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.dd-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dd-modal-header h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.dd-modal-close {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.dd-modal-close:hover { color: #1e293b; }
+
+.dd-modal-error {
+  margin: 0.75rem 1.5rem 0;
+  padding: 0.7rem 1rem;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #dc2626;
+}
+
+.dd-modal-success {
+  margin: 0.75rem 1.5rem 0;
+  padding: 0.7rem 1rem;
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: #065f46;
+}
+
+.dd-modal-body {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dd-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dd-modal-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.dd-modal-field input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: #1e293b;
+  transition: border-color 0.18s;
+}
+
+.dd-modal-field input:focus {
+  outline: none;
+  border-color: var(--primary-color, #00a896);
+  box-shadow: 0 0 0 3px rgba(0, 168, 150, 0.08);
+}
+
+.dd-modal-footer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem 1.25rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.dd-modal-cancel {
+  flex: 1;
+  padding: 0.75rem;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.18s;
+}
+
+.dd-modal-cancel:hover { background: #e2e8f0; }
+
+.dd-modal-save {
+  flex: 1;
+  padding: 0.75rem;
+  background: var(--primary-color, #00a896);
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.18s;
+}
+
+.dd-modal-save:hover:not(:disabled) { background: #008f7e; }
+.dd-modal-save:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .dd-queue-workspace {
+    grid-template-columns: 280px 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dd-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .dd-topbar-right {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .dd-queue-workspace {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .dd-queue-col {
+    border-right: none;
+    border-bottom: 1px solid #e2e8f0;
+    max-height: 40vh;
+  }
+
+  .dd-pad-col {
+    min-height: 60vh;
+  }
+
+  .dd-rx-head,
+  .dd-rx-row {
+    grid-template-columns: 1fr 36px;
+  }
+
+  .dd-rx-head span:nth-child(2),
+  .dd-rx-head span:nth-child(3),
+  .dd-rx-row .dd-rx-select:nth-child(2),
+  .dd-rx-row .dd-rx-select:nth-child(3) {
+    display: none;
+  }
+
+  .dd-embedded-view {
+    height: auto;
+    padding: 1rem;
+  }
+}
+
+/* ── Footer (matches hospital admin hd-footer) ───────────────────────────── */
+.hd-footer {
+  margin-top: auto;
+  padding: 1rem 0;
+  border-top: 1px solid #e3e8ef;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}

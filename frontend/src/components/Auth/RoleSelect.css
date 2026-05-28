@@ -1,0 +1,139 @@
+.role-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 2rem;
+}
+
+.role-card {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.role-header {
+  margin-bottom: 2rem;
+}
+
+.role-header .logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+}
+
+.role-header .logo img {
+  height: 50px;
+}
+
+.role-header .logo span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.role-header h2 {
+  font-size: 1.6rem;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.role-header p {
+  color: var(--text-light);
+}
+
+.role-options {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.role-option {
+  flex: 1;
+  padding: 2rem 1.5rem;
+  border: 2px solid #e9ecef;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: var(--white);
+}
+
+.role-option:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.role-option.selected {
+  border-color: var(--primary-color);
+  background: rgba(0, 168, 150, 0.05);
+}
+
+.role-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.role-option.patient .role-icon {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.role-option.doctor .role-icon {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+.role-option h3 {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.role-option p {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+.role-submit {
+  width: 100%;
+  padding: 1rem;
+  background: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.role-submit:hover {
+  background: var(--primary-dark);
+}
+
+.role-submit:disabled {
+  background: #adb5bd;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .role-options {
+    flex-direction: column;
+  }
+}

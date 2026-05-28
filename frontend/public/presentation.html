@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>HealthMandala – Presentation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#1a1a2e;overflow:hidden;height:100vh;}
+
+/* ── Deck ── */
+.deck{width:100vw;height:100vh;position:relative;}
+.slide{position:absolute;inset:0;display:none;animation:fadeIn .35s ease;}
+.slide.active{display:flex;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── Template layout: white left + blue right ── */
+.slide-inner{
+  width:100%;height:100%;display:flex;
+  background:#fff;
+  box-shadow:0 4px 40px rgba(0,0,0,.18);
+}
+.left{
+  flex:0 0 58%;padding:52px 56px;
+  display:flex;flex-direction:column;justify-content:center;
+  background:#fff;position:relative;overflow:hidden;
+}
+.right{
+  flex:1;background:#e8f2fc;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:40px 36px;position:relative;overflow:hidden;
+}
+
+/* ── Right panel decorative circles ── */
+.right::before{
+  content:'';position:absolute;width:320px;height:320px;border-radius:50%;
+  background:rgba(132,170,216,.18);top:-80px;right:-80px;
+}
+.right::after{
+  content:'';position:absolute;width:200px;height:200px;border-radius:50%;
+  background:rgba(81,113,179,.15);bottom:-40px;left:-40px;
+}
+
+/* ── Left accent bar ── */
+.left::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:5px;
+  background:linear-gradient(180deg,#84aad8,#265894);
+}
+
+/* ── Typography ── */
+.tag{font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:#84aad8;margin-bottom:10px;}
+.slide-title{font-size:2.6rem;font-weight:800;color:#1a2744;line-height:1.15;margin-bottom:14px;}
+.slide-title .accent{color:#265894;}
+.subtitle{font-size:1.05rem;color:#5a6a8a;line-height:1.6;margin-bottom:24px;}
+.section-title{font-size:1.8rem;font-weight:700;color:#1a2744;margin-bottom:28px;}
+
+/* ── Cards ── */
+.cards{display:grid;gap:14px;width:100%;}
+.cards-2{grid-template-columns:1fr 1fr;}
+.cards-3{grid-template-columns:1fr 1fr 1fr;}
+.card{background:#f4f8fd;border:1px solid #d0e4f5;border-radius:12px;padding:16px 18px;}
+.card .icon{font-size:1.5rem;margin-bottom:8px;}
+.card h3{font-size:.9rem;font-weight:700;color:#1a2744;margin-bottom:5px;}
+.card p,.card li{font-size:.78rem;color:#5a6a8a;line-height:1.55;}
+.card ul{padding-left:14px;}
+
+/* ── Right panel content ── */
+.r-title{font-size:1.3rem;font-weight:700;color:#1a2744;margin-bottom:16px;text-align:center;z-index:1;}
+.r-cards{display:flex;flex-direction:column;gap:10px;width:100%;z-index:1;}
+.r-card{background:rgba(255,255,255,.75);border:1px solid rgba(132,170,216,.4);
+  border-radius:10px;padding:12px 16px;backdrop-filter:blur(4px);}
+.r-card h4{font-size:.82rem;font-weight:700;color:#265894;margin-bottom:3px;}
+.r-card p{font-size:.75rem;color:#4a5a7a;line-height:1.5;}
+
+/* ── Stat boxes ── */
+.stats-row{display:flex;gap:16px;margin-top:20px;}
+.stat-box{background:#f4f8fd;border:1px solid #d0e4f5;border-radius:10px;
+  padding:14px 20px;text-align:center;flex:1;}
+.stat-box .num{font-size:2rem;font-weight:800;color:#265894;}
+.stat-box .lbl{font-size:.72rem;color:#84aad8;margin-top:2px;}
+
+/* ── Tech pills ── */
+.pills{display:flex;flex-wrap:wrap;gap:8px;z-index:1;}
+.pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.8);
+  border:1px solid rgba(132,170,216,.5);border-radius:20px;padding:6px 14px;
+  font-size:.78rem;font-weight:600;color:#1a2744;}
+.dot{width:8px;height:8px;border-radius:50%;}
+
+/* ── Timeline ── */
+.timeline{display:flex;flex-direction:column;gap:0;width:100%;}
+.tl-row{display:flex;gap:16px;align-items:flex-start;}
+.tl-left{display:flex;flex-direction:column;align-items:center;min-width:28px;}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:#265894;flex-shrink:0;margin-top:3px;}
+.tl-line{width:2px;flex:1;background:#d0e4f5;min-height:24px;}
+.tl-body{padding-bottom:20px;}
+.tl-body h3{font-size:.88rem;font-weight:700;color:#1a2744;margin-bottom:2px;}
+.tl-body p{font-size:.76rem;color:#5a6a8a;line-height:1.5;}
+
+/* ── Nav ── */
+.nav{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:12px;
+  background:rgba(26,39,68,.9);border:1px solid rgba(132,170,216,.3);
+  border-radius:40px;padding:8px 20px;backdrop-filter:blur(12px);z-index:200;}
+.nav button{background:none;border:none;color:#84aad8;font-size:1rem;
+  cursor:pointer;padding:3px 8px;border-radius:6px;transition:all .2s;}
+.nav button:hover{background:rgba(132,170,216,.2);color:#fff;}
+.nav .counter{font-size:.78rem;color:#5a6a8a;min-width:44px;text-align:center;}
+.nav .dot-nav{width:6px;height:6px;border-radius:50%;background:#2a3a5a;
+  cursor:pointer;transition:background .2s;}
+.nav .dot-nav.on{background:#84aad8;}
+.hint{position:fixed;bottom:72px;right:24px;font-size:.68rem;color:#3a4a6a;}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ══ SLIDE 1 – Title ══ -->
+<div class="slide active">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">Final Year Project · 2025</div>
+    <div class="slide-title">Health<span class="accent">Mandala</span></div>
+    <div class="subtitle">A Smart Doctor Appointment Booking System<br/>built for Nepal's healthcare needs.</div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="num">3</div><div class="lbl">User Roles</div></div>
+      <div class="stat-box"><div class="num">8+</div><div class="lbl">Core Features</div></div>
+      <div class="stat-box"><div class="num">MERN</div><div class="lbl">Stack</div></div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:5rem;z-index:1;">🏥</div>
+    <div class="r-title" style="margin-top:16px;">Digitizing Healthcare Access</div>
+    <div class="r-cards">
+      <div class="r-card"><h4>👤 Patient</h4><p>Book appointments, view prescriptions, track history</p></div>
+      <div class="r-card"><h4>🩺 Doctor</h4><p>Manage schedule, confirm appointments, issue prescriptions</p></div>
+      <div class="r-card"><h4>🛡️ Admin</h4><p>Verify doctors, approve users, oversee platform</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ SLIDE 2 – Problem ══ -->
+<div class="slide">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">Problem Statement</div>
+    <div class="section-title">What Problem<br/>Does It Solve?</div>
+    <div class="cards cards-2">
+      <div class="card"><div class="icon">😤</div><h3>Long Queues</h3><p>Patients wait hours at hospitals with no idea of their position or wait time.</p></div>
+      <div class="card"><div class="icon">📋</div><h3>No Doctor Info</h3><p>Finding the right specialist, availability, and fees requires multiple visits.</p></div>
+      <div class="card"><div class="icon">📅</div><h3>Unmanaged Scheduling</h3><p>Doctors have no digital tool to manage their schedule, leading to overbooking.</p></div>
+      <div class="card"><div class="icon">📄</div><h3>Paper Prescriptions</h3><p>Handwritten prescriptions are easily lost. No digital medical history exists.</p></div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:4rem;z-index:1;">⚕️</div>
+    <div class="r-title">Healthcare in Nepal</div>
+    <div class="r-cards">
+      <div class="r-card"><h4>🏙️ Urban Hospitals</h4><p>Overcrowded OPDs with 3–5 hour average wait times for consultation</p></div>
+      <div class="r-card"><h4>📵 No Digital System</h4><p>Most clinics still rely on paper tokens and manual appointment books</p></div>
+      <div class="r-card"><h4>🔍 Lack of Transparency</h4><p>Patients cannot verify doctor credentials or check real-time availability</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ SLIDE 3 – Solution ══ -->
+<div class="slide">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">Our Solution</div>
+    <div class="section-title">How HealthMandala<br/>Solves It</div>
+    <div class="cards cards-2">
+      <div class="card"><div class="icon">🎫</div><h3>Token-Based Booking</h3><p>Auto-calculated tokens from working hours. 30 min/patient. No overbooking.</p></div>
+      <div class="card"><div class="icon">🔍</div><h3>Find the Right Doctor</h3><p>Browse by specialty, view credentials, fees, hospital, and live availability.</p></div>
+      <div class="card"><div class="icon">💊</div><h3>Digital Prescriptions</h3><p>Doctors issue digital prescriptions. Patients access full history anytime.</p></div>
+      <div class="card"><div class="icon">🛡️</div><h3>Admin Verification</h3><p>NID, NMC certificate, and degree documents reviewed before doctors go live.</p></div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:4rem;z-index:1;">✅</div>
+    <div class="r-title">Key Innovations</div>
+    <div class="r-cards">
+      <div class="r-card"><h4>📅 Progressive Date Display</h4><p>Shows only the nearest available date. Next date unlocks when current is fully booked.</p></div>
+      <div class="r-card"><h4>📱 OTP Verification</h4><p>Twilio SMS OTP ensures only real users can register on the platform.</p></div>
+      <div class="r-card"><h4>🕐 AM/PM Schedule Picker</h4><p>Doctors set working hours with intuitive AM/PM time pickers — no 24h confusion.</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ SLIDE 4 – Features ══ -->
+<div class="slide">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">Core Features</div>
+    <div class="section-title">Key Features<br/>of the System</div>
+    <div class="cards cards-2">
+      <div class="card"><div class="icon">👤</div><h3>Multi-Role System</h3><ul><li>Patient – book, view prescriptions</li><li>Doctor – schedule, confirm</li><li>Admin – approve, oversee</li></ul></div>
+      <div class="card"><div class="icon">🗓️</div><h3>Smart Scheduling</h3><ul><li>Weekly schedule with AM/PM picker</li><li>Lunch break configuration</li><li>Leave management</li></ul></div>
+      <div class="card"><div class="icon">🔐</div><h3>Secure Auth</h3><ul><li>Firebase email/password</li><li>JWT API security</li><li>Twilio SMS OTP</li></ul></div>
+      <div class="card"><div class="icon">💳</div><h3>eSewa Payment</h3><ul><li>Digital wallet integration</li><li>Payment status tracking</li><li>Khalti coming soon</li></ul></div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:3.5rem;z-index:1;">⚙️</div>
+    <div class="r-title">Additional Features</div>
+    <div class="r-cards">
+      <div class="r-card"><h4>🏥 Doctor Registration</h4><p>Multi-step form with NID, NMC certificate, and degree certificate uploads</p></div>
+      <div class="r-card"><h4>📋 Appointment Management</h4><p>Status flow: pending → confirmed → completed with doctor confirmation</p></div>
+      <div class="r-card"><h4>📊 Admin Dashboard</h4><p>View all users, pending approvals, appointments, and platform statistics</p></div>
+      <div class="r-card"><h4>🎫 Token System</h4><p>Auto-assigns next available token. Patients see their slot time estimate.</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ SLIDE 5 – Technologies ══ -->
+<div class="slide">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">Technologies Used</div>
+    <div class="section-title">Tech Stack</div>
+    <div class="cards cards-2" style="margin-bottom:16px;">
+      <div class="card">
+        <h3 style="color:#61dafb;margin-bottom:10px;">⚛️ Frontend</h3>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:5px;">
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">React 19</span> — UI with hooks</li>
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">React Router v7</span> — routing</li>
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">Firebase</span> — auth & email verify</li>
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">CSS Modules</span> — styling</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:#68a063;margin-bottom:10px;">🟢 Backend</h3>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:5px;">
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">Node.js + Express</span> — REST API</li>
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">MongoDB + Mongoose</span> — database</li>
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">JWT + bcryptjs</span> — security</li>
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">Multer</span> — file uploads</li>
+          <li style="font-size:.78rem;color:#5a6a8a;"><span style="color:#265894;font-weight:600;">Twilio</span> — SMS OTP</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:3rem;z-index:1;margin-bottom:16px;">🛠️</div>
+    <div class="r-title">Technology Highlights</div>
+    <div class="pills">
+      <div class="pill"><div class="dot" style="background:#61dafb;"></div>React 19</div>
+      <div class="pill"><div class="dot" style="background:#68a063;"></div>Node.js</div>
+      <div class="pill"><div class="dot" style="background:#f0db4f;"></div>Express</div>
+      <div class="pill"><div class="dot" style="background:#4db33d;"></div>MongoDB</div>
+      <div class="pill"><div class="dot" style="background:#ffca28;"></div>Firebase</div>
+      <div class="pill"><div class="dot" style="background:#f22f46;"></div>Twilio</div>
+      <div class="pill"><div class="dot" style="background:#a78bfa;"></div>JWT</div>
+      <div class="pill"><div class="dot" style="background:#fb923c;"></div>Multer</div>
+      <div class="pill"><div class="dot" style="background:#265894;"></div>eSewa</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ SLIDE 6 – Architecture ══ -->
+<div class="slide">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">System Design</div>
+    <div class="section-title">System Architecture</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+      <div class="card" style="flex:1;text-align:center;padding:14px 10px;">
+        <div style="font-size:1.8rem;">🖥️</div>
+        <h3 style="font-size:.82rem;">React Frontend</h3>
+        <p>Port 3000<br/>SPA + Firebase Auth</p>
+      </div>
+      <div style="font-size:1.4rem;color:#84aad8;flex-shrink:0;">⟷</div>
+      <div class="card" style="flex:1;text-align:center;padding:14px 10px;">
+        <div style="font-size:1.8rem;">⚙️</div>
+        <h3 style="font-size:.82rem;">Express API</h3>
+        <p>Port 5001<br/>REST + JWT</p>
+      </div>
+      <div style="font-size:1.4rem;color:#84aad8;flex-shrink:0;">⟷</div>
+      <div class="card" style="flex:1;text-align:center;padding:14px 10px;">
+        <div style="font-size:1.8rem;">🗄️</div>
+        <h3 style="font-size:.82rem;">MongoDB</h3>
+        <p>Cloud Atlas<br/>5 collections</p>
+      </div>
+    </div>
+    <div class="cards cards-2">
+      <div class="card" style="text-align:center;"><div class="icon">🔥</div><h3>Firebase</h3><p>Email auth & verification</p></div>
+      <div class="card" style="text-align:center;"><div class="icon">📱</div><h3>Twilio</h3><p>SMS OTP service</p></div>
+      <div class="card" style="text-align:center;"><div class="icon">📁</div><h3>Multer</h3><p>Document & photo storage</p></div>
+      <div class="card" style="text-align:center;"><div class="icon">💰</div><h3>eSewa</h3><p>Payment gateway</p></div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:3rem;z-index:1;margin-bottom:12px;">🏗️</div>
+    <div class="r-title">Database Collections</div>
+    <div class="r-cards">
+      <div class="r-card"><h4>👤 Users</h4><p>Authentication, roles (patient/doctor/admin), status</p></div>
+      <div class="r-card"><h4>🩺 DoctorRegistration</h4><p>Profile, schedule, documents, leaves, lunch break</p></div>
+      <div class="r-card"><h4>🏥 PatientRegistration</h4><p>Personal info, medical history, emergency contacts</p></div>
+      <div class="r-card"><h4>📅 Appointments</h4><p>Token number, date, status, payment info</p></div>
+      <div class="r-card"><h4>💊 Prescriptions</h4><p>Medicines, dosage, doctor notes, diagnosis</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ SLIDE 7 – Methodology ══ -->
+<div class="slide">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">Development Methodology</div>
+    <div class="section-title">Agile Development<br/>Approach</div>
+    <div class="cards cards-2">
+      <div class="card"><div class="icon">🔄</div><h3>Iterative Sprints</h3><p>Built in short cycles — each sprint delivered a working, testable feature increment.</p></div>
+      <div class="card"><div class="icon">🧩</div><h3>Component-Based</h3><p>Frontend split into reusable React components. Each feature is an independent module.</p></div>
+      <div class="card"><div class="icon">🔗</div><h3>API-First Backend</h3><p>REST API designed and tested independently before frontend integration.</p></div>
+      <div class="card"><div class="icon">🧪</div><h3>Continuous Testing</h3><p>Each feature tested manually after implementation across all three user roles.</p></div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:3rem;z-index:1;margin-bottom:12px;">📐</div>
+    <div class="r-title">Design Principles</div>
+    <div class="r-cards">
+      <div class="r-card"><h4>🎯 User-Centered Design</h4><p>Separate dashboards tailored to each role's specific needs and workflows</p></div>
+      <div class="r-card"><h4>🔒 Security First</h4><p>JWT auth, bcrypt hashing, document verification, account approval gates</p></div>
+      <div class="r-card"><h4>📱 Responsive UI</h4><p>Mobile-friendly layouts using CSS Grid and Flexbox throughout</p></div>
+      <div class="r-card"><h4>⚡ Performance</h4><p>Lazy loading, optimistic UI updates, minimal re-renders with React hooks</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ SLIDE 8 – Timeline ══ -->
+<div class="slide">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">Project Timeline</div>
+    <div class="section-title">Development Phases</div>
+    <div class="timeline">
+      <div class="tl-row"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><h3>Phase 1 — Planning & Design</h3><p>Requirements, system design, DB schema, UI wireframes, tech stack selection</p></div></div>
+      <div class="tl-row"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><h3>Phase 2 — Auth & Registration</h3><p>Firebase auth, OTP verification, multi-step doctor & patient registration with document uploads</p></div></div>
+      <div class="tl-row"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><h3>Phase 3 — Core Booking System</h3><p>Token-based booking, doctor schedule management, progressive date display, admin approval</p></div></div>
+      <div class="tl-row"><div class="tl-left"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><h3>Phase 4 — Advanced Features</h3><p>Digital prescriptions, patient history, eSewa payment, role dashboards</p></div></div>
+      <div class="tl-row"><div class="tl-left"><div class="tl-dot"></div></div>
+        <div class="tl-body"><h3>Phase 5 — Testing & Refinement</h3><p>Bug fixes, timezone handling, AM/PM picker, UI polish, cross-role testing</p></div></div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:3rem;z-index:1;margin-bottom:12px;">📊</div>
+    <div class="r-title">Project Stats</div>
+    <div class="r-cards">
+      <div class="r-card"><h4>📁 Codebase</h4><p>Frontend: React SPA · Backend: Node.js REST API · Shared: MongoDB Atlas</p></div>
+      <div class="r-card"><h4>🔌 API Endpoints</h4><p>20+ REST endpoints covering auth, booking, scheduling, prescriptions, admin</p></div>
+      <div class="r-card"><h4>🧩 Components</h4><p>30+ React components across patient, doctor, admin, and shared modules</p></div>
+      <div class="r-card"><h4>🗄️ Data Models</h4><p>5 Mongoose schemas with relationships, validation, and status workflows</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ SLIDE 9 – Thank You ══ -->
+<div class="slide">
+<div class="slide-inner">
+  <div class="left">
+    <div class="tag">Thank You</div>
+    <div class="slide-title">Health<span class="accent">Mandala</span></div>
+    <div class="subtitle">Bridging the gap between patients and doctors through smart, digital healthcare management in Nepal.</div>
+    <div class="cards cards-3" style="margin-top:8px;">
+      <div class="card" style="text-align:center;"><div class="icon">🌐</div><h3>Stack</h3><p>MERN + Firebase + Twilio</p></div>
+      <div class="card" style="text-align:center;"><div class="icon">👥</div><h3>Roles</h3><p>Patient · Doctor · Admin</p></div>
+      <div class="card" style="text-align:center;"><div class="icon">🎯</div><h3>Goal</h3><p>Digitize healthcare access</p></div>
+    </div>
+  </div>
+  <div class="right">
+    <div style="font-size:5rem;z-index:1;">🙏</div>
+    <div class="r-title" style="margin-top:16px;">Questions Welcome</div>
+    <div class="r-cards">
+      <div class="r-card"><h4>🔗 Frontend</h4><p>React 19 · Firebase · React Router v7</p></div>
+      <div class="r-card"><h4>⚙️ Backend</h4><p>Node.js · Express · MongoDB · JWT · Twilio</p></div>
+      <div class="r-card"><h4>💡 Key Feature</h4><p>Token-based booking with progressive date display</p></div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- ── Nav ── -->
+<div class="nav">
+  <button onclick="go(-1)">&#8592;</button>
+  <div id="dots" style="display:flex;gap:6px;"></div>
+  <span class="counter" id="ctr">1 / 9</span>
+  <button onclick="go(1)">&#8594;</button>
+</div>
+<div class="hint">← → arrow keys</div>
+
+<script>
+const slides=document.querySelectorAll('.slide');
+const dotsEl=document.getElementById('dots');
+const ctr=document.getElementById('ctr');
+let cur=0;
+slides.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='dot-nav'+(i===0?' on':'');
+  d.onclick=()=>goTo(i);
+  dotsEl.appendChild(d);
+});
+function goTo(n){
+  slides[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('on');
+  cur=(n+slides.length)%slides.length;
+  slides[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('on');
+  ctr.textContent=`${cur+1} / ${slides.length}`;
+}
+function go(d){goTo(cur+d);}
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
+});
+</script>
+</body>
+</html>
