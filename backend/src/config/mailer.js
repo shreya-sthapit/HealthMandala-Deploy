@@ -1,20 +1,16 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  host: 'smtp.gmail.com',
+  host: 'smtp-relay.brevo.com',
   port: 587,
-  secure: false,                    // Use STARTTLS
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
   tls: {
     rejectUnauthorized: false
-  },
-  family: 4,                        // Force IPv4 (important for Render)
-  debug: true,                      // Enable debug logs
-  logger: true
+  }
 });
 
 // Send 6-digit OTP to email
