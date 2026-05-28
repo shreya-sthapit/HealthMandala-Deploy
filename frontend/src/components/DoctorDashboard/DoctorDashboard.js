@@ -212,7 +212,8 @@ const LiveQueue = ({ doctorId, doctorName }) => {
     // Also try WebSocket for instant updates
     let ws;
     try {
-      ws = new WebSocket('process.env.REACT_APP_WS_URL || 'ws://localhost:5001'');
+      const wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:5001';
+      ws = new WebSocket(wsUrl);
       wsRef.current = ws;
       ws.onmessage = (e) => {
         try {
