@@ -853,7 +853,7 @@ router.post('/profile/logo', uploadConfigs.single('logo'), async (req, res) => {
 
     if (!req.file) return res.status(400).json({ error: 'No image uploaded' });
 
-    const logoUrl = `/${req.file.path.replace(/\\/g, '/')}`;
+    const logoUrl = req.file.path;
     const hospital = await HospitalPartner.findByIdAndUpdate(
       hospitalId, 
       { logoUrl, updatedAt: Date.now() }, 

@@ -1,29 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const jwt = require('jsonwebtoken');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
+const multer = require('multer');
 const HospitalPartner = require('../models/HospitalPartner');
 const HospitalAdmin = require('../models/HospitalAdmin');
 const User = require('../models/User');
 const { sendHospitalInviteEmail } = require('../config/mailer');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const dir = 'uploads/partners/';
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + unique + path.extname(file.originalname));
-  }
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => ({
+    folder: 'healthmandala/partners',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
+    resource_type: 'auto',
+    public_id: file.fieldname + '-' + Date.now() + '-' + Math.round(Math.random() * 1e9),
+  }),
 });
 
 const fileFilter = (req, file, cb) => {
-  const ok = /jpeg|jpg|png|pdf/.test(path.extname(file.originalname).toLowerCase())
-    && /image\/(jpeg|jpg|png)|application\/pdf/.test(file.mimetype);
+  const ok = /jpeg|jpg|png|pdf/.test(file.originalname.toLowerCase());
   ok ? cb(null, true) : cb(new Error('Only PDF or image files are allowed'));
 };
 
