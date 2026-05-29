@@ -1,76 +1,70 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
 
-// Create uploads directory if it doesn't exist
-const createUploadDir = (dir) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-};
-
-// Storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    let uploadPath = 'uploads/';
-    
-    // Determine upload path based on file field name
-    if (file.fieldname.includes('nid')) {
-      uploadPath += 'nid/';
-    } else if (file.fieldname.includes('profile')) {
-      uploadPath += 'profiles/';
-    } else if (file.fieldname.includes('logo')) {
-      uploadPath += 'logos/';
-    } else if (file.fieldname.includes('certificate') || file.fieldname.includes('degree')) {
-      uploadPath += 'documents/';
-    } else {
-      uploadPath += 'others/';
-    }
-    
-    createUploadDir(uploadPath);
-    cb(null, uploadPath);
-  },
-  filename: (req, file, cb) => {
-    // Generate unique filename with timestamp
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const fileExtension = path.extname(file.originalname);
-    const fileName = file.fieldname + '-' + uniqueSuffix + fileExtension;
-    cb(null, fileName);
-  }
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// File filter to allow only images
+const createStorage = (folder) => new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => ({
+    folder: `healthmandala/${folder}`,
+    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'],
+    resource_type: 'auto',
+    public_id: file.fieldname + '-' + Date.now() + '-' + Math.round(Math.random() * 1E9),
+  }),
+});
+
+const getStorage = (file) => {
+  if (file.fieldname.includes('nid')) return createStorage('nid');
+  if (file.fieldname.includes('profile')) return createStorage('profiles');
+  if (file.fieldname.includes('logo')) return createStorage('logos');
+  if (file.fieldname.includes('certificate') || file.fieldname.includes('degree')) return createStorage('documents');
+  return createStorage('others');
+};
+
+const dynamicStorage = new CloudinaryStorage({
+  cloudinary,
+  params: (req, file) => ({
+    folder: `healthmandala/${
+      file.fieldname.includes('nid') ? 'nid' :
+      file.fieldname.includes('profile') ? 'profiles' :
+      file.fieldname.includes('logo') ? 'logos' :
+      file.fieldname.includes('certificate') || file.fieldname.includes('degree') ? 'documents' :
+      'others'
+    }`,
+    allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'],
+    resource_type: 'auto',
+    public_id: file.fieldname + '-' + Date.now() + '-' + Math.round(Math.random() * 1E9),
+  }),
+});
+
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|webp/;
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const allowedTypes = /jpeg|jpg|png|gif|webp|pdf/;
+  const extname = allowedTypes.test(file.originalname.toLowerCase());
   const mimetype = allowedTypes.test(file.mimetype);
-
-  if (mimetype && extname) {
+  if (mimetype || extname) {
     return cb(null, true);
-  } else {
-    cb(new Error('Only image files are allowed (jpeg, jpg, png, gif, webp)'));
   }
+  cb(new Error('Only image and PDF files are allowed'));
 };
 
-// Multer configuration
 const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
-  },
-  fileFilter: fileFilter
+  storage: dynamicStorage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter,
 });
 
-// Different upload configurations for different use cases
 const uploadConfigs = {
-  // Patient registration uploads
   patientUploads: upload.fields([
     { name: 'profilePhoto', maxCount: 1 },
     { name: 'nidFront', maxCount: 1 },
     { name: 'nidBack', maxCount: 1 }
   ]),
-  
-  // Doctor registration uploads
+
   doctorUploads: upload.fields([
     { name: 'profilePhoto', maxCount: 1 },
     { name: 'nidFront', maxCount: 1 },
@@ -78,12 +72,9 @@ const uploadConfigs = {
     { name: 'nmcCertificate', maxCount: 1 },
     { name: 'degreeCertificate', maxCount: 1 }
   ]),
-  
-  // Single file upload
+
   single: (fieldName) => upload.single(fieldName),
-  
-  // Multiple files upload
-  multiple: (fieldName, maxCount = 5) => upload.array(fieldName, maxCount)
+  multiple: (fieldName, maxCount = 5) => upload.array(fieldName, maxCount),
 };
 
 module.exports = uploadConfigs;
