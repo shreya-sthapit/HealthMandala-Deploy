@@ -25,6 +25,9 @@ npm run dev
 PORT=5001
 MONGODB_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
+EMAIL_HOST=smtp-relay.brevo.com
+EMAIL_PORT=2525
+EMAIL_SECURE=false
 EMAIL_USER=your_brevo_smtp_login
 EMAIL_PASS=your_brevo_smtp_key
 EMAIL_FROM=HealthMandala <verified_sender@example.com>
@@ -34,7 +37,7 @@ TWILIO_AUTH_TOKEN=your_token
 TWILIO_VERIFY_SERVICE_SID=your_service_sid
 ```
 
-Email OTPs are sent through Brevo SMTP (`smtp-relay.brevo.com`). In production, add the same `EMAIL_USER`, `EMAIL_PASS`, and `EMAIL_FROM` values to your Render backend environment variables. `EMAIL_FROM` must use a sender address that is verified in Brevo.
+Email OTPs are sent through Brevo SMTP. In production, add the same `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_SECURE`, `EMAIL_USER`, `EMAIL_PASS`, and `EMAIL_FROM` values to your Render backend environment variables. `EMAIL_FROM` must use a sender address that is verified in Brevo. Use `EMAIL_PORT=2525` first on Render if port `587` times out.
 
 ## API Endpoints
 

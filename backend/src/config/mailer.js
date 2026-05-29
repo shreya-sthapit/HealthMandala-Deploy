@@ -1,11 +1,16 @@
 const nodemailer = require('nodemailer');
 
 const requiredEmailEnv = ['EMAIL_USER', 'EMAIL_PASS', 'EMAIL_FROM'];
+const emailHost = process.env.EMAIL_HOST || 'smtp-relay.brevo.com';
+const emailPort = Number(process.env.EMAIL_PORT || 2525);
+const emailSecure = process.env.EMAIL_SECURE
+  ? process.env.EMAIL_SECURE === 'true'
+  : emailPort === 465;
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp-relay.brevo.com',
-  port: 587,
-  secure: false,
+  host: emailHost,
+  port: emailPort,
+  secure: emailSecure,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -20,6 +25,10 @@ const validateEmailConfig = () => {
 
   if (missing.length > 0) {
     throw new Error(`Missing email configuration: ${missing.join(', ')}. Configure these environment variables in Render using Brevo SMTP credentials.`);
+  }
+
+  if (!Number.isInteger(emailPort) || emailPort <= 0) {
+    throw new Error('Invalid email configuration: EMAIL_PORT must be a valid port number.');
   }
 };
 
@@ -50,7 +59,10 @@ const sendEmailOTP = async (to, name, otp) => {
       message: error.message,
       code: error.code,
       command: error.command,
-      response: error.response
+      response: error.response,
+      emailHost,
+      emailPort,
+      emailSecure
     });
     throw error;
   }
