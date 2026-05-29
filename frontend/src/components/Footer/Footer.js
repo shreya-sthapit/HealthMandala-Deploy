@@ -37,19 +37,9 @@ const Footer = () => {
           </ul>
         </div>
         <div className="gf-section">
-          <h4>Support</h4>
-          <ul>
-            <li><a href="mailto:support@healthmandala.com">Help Center</a></li>
-            <li><a href="mailto:support@healthmandala.com">Contact Us</a></li>
-            <li><a href="/#features">FAQs</a></li>
-            <li><a href="/#about">Privacy Policy</a></li>
-          </ul>
-        </div>
-        <div className="gf-section">
           <h4>Contact</h4>
           <ul>
-            <li>healthmandala@gmail.com</li>
-            <li>1-800-HEALTH</li>
+            <li>info.healthmandala@gmail.com</li>
             <li>Kathmandu, Nepal</li>
           </ul>
         </div>
