@@ -16,6 +16,21 @@ const EyeOffIcon = () => (
   </svg>
 );
 
+const getStaffDashboard = (role) => {
+  const normalizedRole = String(role || '').trim().toLowerCase().replace(/[\s-]+/g, '_');
+  const dashboardMap = {
+    receptionist: '/receptionist-dashboard',
+    pharmacist: '/pharmacist-dashboard',
+    nurse: '/receptionist-dashboard',
+    lab_technician: '/receptionist-dashboard',
+  };
+
+  return {
+    role: normalizedRole || 'staff',
+    dashboard: dashboardMap[normalizedRole] || '/hospital-dashboard',
+  };
+};
+
 export default function SetStaffPassword() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -25,12 +40,20 @@ export default function SetStaffPassword() {
   const [hospitalName, setHospitalName] = useState('');
   const [staffName, setStaffName] = useState('');
   const [staffRole, setStaffRole] = useState('');
+  const [redirectTo, setRedirectTo] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (pageStatus === 'success' && redirectTo) {
+      const timer = setTimeout(() => navigate(redirectTo, { replace: true }), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [pageStatus, redirectTo, navigate]);
 
   useEffect(() => {
     if (!token) { setPageStatus('error'); return; }
@@ -62,18 +85,10 @@ export default function SetStaffPassword() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         // Store the specific staff role (receptionist, pharmacist, etc.) for routing
-        const staffRole = data.user.staffRole || data.user.role;
-        localStorage.setItem('userRole', staffRole);
+        const resolved = getStaffDashboard(data.user.staffRole || data.user.role);
+        localStorage.setItem('userRole', resolved.role);
+        setRedirectTo(resolved.dashboard);
         setPageStatus('success');
-        // Redirect to role-specific dashboard
-        const dashboardMap = {
-          receptionist: '/receptionist-dashboard',
-          pharmacist: '/pharmacist-dashboard',
-          nurse: '/receptionist-dashboard',
-          lab_technician: '/receptionist-dashboard',
-        };
-        const destination = dashboardMap[staffRole] || '/hospital-dashboard';
-        setTimeout(() => navigate(destination), 1500);
       } else {
         if (data.error?.toLowerCase().includes('expired')) setPageStatus('expired');
         else setError(data.error || 'Something went wrong. Please try again.');
@@ -87,12 +102,15 @@ export default function SetStaffPassword() {
 
   // ── Status screens ──
   if (pageStatus === 'success') {
+    const roleLabel = redirectTo === '/receptionist-dashboard' ? 'receptionist'
+      : redirectTo === '/pharmacist-dashboard' ? 'pharmacist'
+      : 'staff';
     return (
       <div className="ap-page">
         <div className="ap-card" style={{ maxWidth: 480, height: 'auto', padding: '3rem 2rem', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
           <div className="ap-popup-icon" style={{ margin: '0 auto 1.25rem' }}>✓</div>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1e293b', marginBottom: '0.5rem' }}>You're all set!</h2>
-          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Redirecting to your dashboard...</p>
+          <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Redirecting to your {roleLabel} dashboard...</p>
         </div>
       </div>
     );

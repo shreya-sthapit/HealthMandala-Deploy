@@ -43,6 +43,13 @@ export default function SetHospitalPassword() {
     }
   }, [token]);
 
+  useEffect(() => {
+    if (pageStatus === 'success') {
+      const timer = setTimeout(() => navigate('/hospital-dashboard', { replace: true }), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [pageStatus, navigate]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -61,7 +68,6 @@ export default function SetHospitalPassword() {
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('userRole', data.user.role);
         setPageStatus('success');
-        setTimeout(() => navigate('/hospital-dashboard'), 1500);
       } else {
         if (data.error?.toLowerCase().includes('expired')) setPageStatus('expired');
         else setError(data.error || 'Something went wrong. Please try again.');
