@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 
 // This page handles the redirect from Khalti after payment.
 // Khalti appends: ?pidx=...&status=...&transaction_id=...&purchase_order_id=...
@@ -36,7 +37,7 @@ const KhaltiReturn = () => {
 
       try {
         // Verify with backend
-        const verifyRes = await fetch(process.env.REACT_APP_API_URL + '/api/khalti/verify', {
+        const verifyRes = await fetch(API_BASE_URL + '/api/khalti/verify', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ pidx }),
@@ -62,7 +63,7 @@ const KhaltiReturn = () => {
         console.log('Retrieved booking state:', bookingState);
 
         // Save appointment
-        const bookRes = await fetch(process.env.REACT_APP_API_URL + '/api/appointments/book', {
+        const bookRes = await fetch(API_BASE_URL + '/api/appointments/book', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

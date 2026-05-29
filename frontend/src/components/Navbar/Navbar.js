@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import LogoutModal from '../Profile/LogoutModal';
+import API_BASE_URL from '../../config/api';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -58,7 +59,7 @@ const Navbar = () => {
   const fetchNotificationsPreview = async (userId) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/notifications/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/notifications/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();

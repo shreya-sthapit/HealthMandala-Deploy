@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../config/firebase.ts';
+import API_BASE_URL from '../../config/api';
 import './SignupNew.css';
 
 const Signup = () => {
@@ -112,7 +113,7 @@ const Signup = () => {
         const phoneNumber = `+977${formData.phone}`;
         
         // Call backend to send OTP via Twilio
-        const response = await fetch(process.env.REACT_APP_API_URL + '/api/otp/send', {
+        const response = await fetch(API_BASE_URL + '/api/otp/send', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

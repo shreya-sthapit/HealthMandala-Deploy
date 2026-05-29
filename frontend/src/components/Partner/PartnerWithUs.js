@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './PartnerWithUs.css';
 
 const FACILITY_CATEGORIES = [
@@ -189,7 +190,7 @@ export default function PartnerWithUs() {
       Object.entries(form).forEach(([k, v]) => v && fd.append(k, v));      fd.append('operatingLicense', opLic);
       fd.append('companyRegCert', regCert);
       if (taxCert) fd.append('taxClearance', taxCert);
-      const res = await fetch(process.env.REACT_APP_API_URL + '/api/partner/apply', { method: 'POST', body: fd });
+      const res = await fetch(API_BASE_URL + '/api/partner/apply', { method: 'POST', body: fd });
       const data = await res.json();
       if (data.success) setSubmitted(true);
       else setSubmitError(data.error || 'Submission failed.');
@@ -201,7 +202,7 @@ export default function PartnerWithUs() {
     e.preventDefault();
     setStatusLoading(true); setStatusResult(null);
     try {
-      const res = await fetch(`/api/partner/status/${encodeURIComponent(statusEmail)}`);
+      const res = await fetch(`${API_BASE_URL}/api/partner/status/${encodeURIComponent(statusEmail)}`);
       const data = await res.json();
       setStatusResult(data.success ? data.application : { error: data.error });
     } catch { setStatusResult({ error: 'Unable to connect.' }); }

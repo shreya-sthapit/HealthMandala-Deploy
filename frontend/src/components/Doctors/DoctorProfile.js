@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './Doctors.css';
 
 const DoctorProfile = () => {
@@ -15,7 +16,7 @@ const DoctorProfile = () => {
         setLoading(true);
         
         // First get all approved doctors
-        const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
+        const response = await fetch(API_BASE_URL + '/api/doctor/approved');
         const data = await response.json();
         
         if (data.success && data.doctors) {

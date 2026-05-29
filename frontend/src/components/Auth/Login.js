@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './Auth.css';
 
 const Login = () => {
@@ -38,7 +39,7 @@ const Login = () => {
         loginData.phone = `+977${formData.phone}`;
       }
 
-      const response = await fetch(process.env.REACT_APP_API_URL + '/api/auth/login', {
+      const response = await fetch(API_BASE_URL + '/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

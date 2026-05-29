@@ -362,16 +362,16 @@ const Profile = () => {
     try {
       setLoading(true);
       const statusEndpoint = role === 'doctor'
-        ? `/api/doctor/status/${uid}`
-        : `/api/patient/status/${uid}`;
+        ? `${API_BASE_URL}/api/doctor/status/${uid}`
+        : `${API_BASE_URL}/api/patient/status/${uid}`;
 
       const statusRes = await fetch(statusEndpoint);
       const statusData = await statusRes.json();
 
       if (statusData.success && statusData.hasRegistration) {
         const profileEndpoint = role === 'doctor'
-          ? `/api/doctor/profile/${uid}`
-          : `/api/patient/profile/${uid}`;
+          ? `${API_BASE_URL}/api/doctor/profile/${uid}`
+          : `${API_BASE_URL}/api/patient/profile/${uid}`;
 
         const profileRes = await fetch(profileEndpoint);
         const profileData = await profileRes.json();
@@ -450,7 +450,7 @@ const Profile = () => {
       if (nidFrontFile) fd.append('nidFront', nidFrontFile);
       if (nidBackFile) fd.append('nidBack', nidBackFile);
 
-      const res = await fetch(`/api/patient/profile/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/patient/profile/${userId}`, {
         method: 'PUT',
         body: fd,
       });

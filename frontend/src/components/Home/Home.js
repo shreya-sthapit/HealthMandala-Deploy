@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './Home.css';
 import { requireApproval } from '../../utils/approvalCheck';
 
@@ -64,7 +65,7 @@ const Home = () => {
 
   const fetchUpcomingAppointments = async (userId) => {
     try {
-      const response = await fetch(`/api/appointments/patient/${userId}`);
+      const response = await fetch(`${API_BASE_URL}/api/appointments/patient/${userId}`);
       const data = await response.json();
       
       if (data.success) {
@@ -99,7 +100,7 @@ const Home = () => {
 
   const fetchApprovedDoctors = async () => {
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
+      const response = await fetch(API_BASE_URL + '/api/doctor/approved');
       return await response.json();
     } catch (error) {
       console.error('Error fetching doctors:', error);
@@ -131,7 +132,7 @@ const Home = () => {
     }
 
     try {
-      const response = await fetch(`/api/appointments/cancel/${appointmentId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/appointments/cancel/${appointmentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

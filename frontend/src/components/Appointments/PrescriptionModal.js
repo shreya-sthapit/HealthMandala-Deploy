@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import API_BASE_URL from '../../config/api';
 import './PrescriptionModal.css';
 
 const PrescriptionModal = ({ appointment, onClose }) => {
@@ -13,7 +14,7 @@ const PrescriptionModal = ({ appointment, onClose }) => {
   const fetchPrescriptions = async () => {
     try {
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
-      const response = await fetch(`/api/prescriptions/patient/${userData.id}`);
+      const response = await fetch(`${API_BASE_URL}/api/prescriptions/patient/${userData.id}`);
       const data = await response.json();
       if (data.success) {
         setPrescriptions(data.prescriptions);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const LandingPage = () => {
 
   const fetchHospitals = async () => {
     try {
-      const res = await fetch(process.env.REACT_APP_API_URL + '/api/partner/approved');
+      const res = await fetch(API_BASE_URL + '/api/partner/approved');
       const data = await res.json();
       if (data.success && data.hospitals) {
         setHospitals(data.hospitals); // Store all hospitals for dropdown
@@ -41,8 +42,8 @@ const LandingPage = () => {
   const fetchDoctorsAndSpecialties = async () => {
     try {
       const [doctorsRes, countsRes] = await Promise.all([
-        fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved'),
-        fetch(process.env.REACT_APP_API_URL + '/api/doctor/specialty-counts')
+        fetch(API_BASE_URL + '/api/doctor/approved'),
+        fetch(API_BASE_URL + '/api/doctor/specialty-counts')
       ]);
 
       const doctorsData = await doctorsRes.json();

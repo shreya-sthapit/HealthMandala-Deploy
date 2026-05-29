@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './HospitalAppointments.css';
 
 const HospitalAppointments = () => {
@@ -42,7 +43,7 @@ const HospitalAppointments = () => {
 
   const fetchHospitals = async () => {
     try {
-      const res = await fetch(process.env.REACT_APP_API_URL + '/api/partner/approved');
+      const res = await fetch(API_BASE_URL + '/api/partner/approved');
       const data = await res.json();
       if (data.success && data.hospitals) {
         setHospitals(data.hospitals);
@@ -164,7 +165,6 @@ const HospitalAppointments = () => {
         <div className="hospital-grid">
           {filtered.map(hospital => {
             const hospitalType = getHospitalType(hospital.facilityCategory);
-            const API_BASE_URL = `http://${window.location.hostname}:5001`;
             
             // Convert category to CSS class name
             const badgeClass = hospitalType.toLowerCase()

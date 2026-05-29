@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './DoctorSchedule.css';
 
 const to12h = (time24) => {
@@ -89,7 +90,7 @@ const DoctorSchedule = ({ embedded = false }) => {
   const fetchDoctorSchedule = async (uid) => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/doctor/profile/${uid}`);
+      const res = await fetch(`${API_BASE_URL}/api/doctor/profile/${uid}`);
       const data = await res.json();
       if (data.success && data.profile) {
         const profile = data.profile;
@@ -165,7 +166,7 @@ const DoctorSchedule = ({ embedded = false }) => {
     if (!userId) { setMessage('User not found. Please login again.'); return; }
     try {
       setSaving(true); setMessage('');
-      const res = await fetch(`/api/doctor/schedule/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/doctor/schedule/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -196,7 +197,7 @@ const DoctorSchedule = ({ embedded = false }) => {
       alert('Please fill all leave details'); return;
     }
     try {
-      const res = await fetch(`/api/doctor/leave/${userId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/doctor/leave/${userId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newLeave),
@@ -215,7 +216,7 @@ const DoctorSchedule = ({ embedded = false }) => {
   const handleRemoveLeave = async (leaveId) => {
     if (!window.confirm('Remove this leave?')) return;
     try {
-      const res = await fetch(`/api/doctor/leave/${userId}/${leaveId}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE_URL}/api/doctor/leave/${userId}/${leaveId}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
         setLeaves(data.leaves);

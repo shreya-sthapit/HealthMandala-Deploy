@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import API_BASE_URL from '../../config/api';
 import './PatientDetailModal.css';
 
 const PatientDetailModal = ({ patient, onClose }) => {
@@ -24,7 +25,7 @@ const PatientDetailModal = ({ patient, onClose }) => {
   const fetchPrescriptions = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/prescriptions/patient/${patient.userId}`);
+      const response = await fetch(`${API_BASE_URL}/api/prescriptions/patient/${patient.userId}`);
       const data = await response.json();
       
       if (data.success) {
@@ -82,7 +83,7 @@ const PatientDetailModal = ({ patient, onClose }) => {
 
       console.log('Saving prescription:', prescriptionData);
 
-      const response = await fetch(process.env.REACT_APP_API_URL + '/api/prescriptions/create', {
+      const response = await fetch(API_BASE_URL + '/api/prescriptions/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(prescriptionData)

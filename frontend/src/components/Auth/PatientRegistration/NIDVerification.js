@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PatientRegLayout from './PatientRegLayout';
+import API_BASE_URL from '../../../config/api';
 import './PatientRegLayout.css';
 
 const NIDVerification = () => {
@@ -109,7 +110,7 @@ const NIDVerification = () => {
       fd.append('nidFront', formData.nidFront);
       fd.append('nidBack', formData.nidBack);
 
-      const response = await fetch(process.env.REACT_APP_API_URL + '/api/patient/register', { method: 'POST', body: fd });
+      const response = await fetch(API_BASE_URL + '/api/patient/register', { method: 'POST', body: fd });
       const data = await response.json();
       if (data.success) {
         sessionStorage.removeItem('pendingToken');

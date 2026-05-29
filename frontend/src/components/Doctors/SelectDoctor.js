@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import DoctorProfileModal from './DoctorProfileModal';
+import API_BASE_URL from '../../config/api';
 import './SelectDoctor.css';
 
 const SelectDoctor = () => {
@@ -65,7 +66,7 @@ const SelectDoctor = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
+      const response = await fetch(API_BASE_URL + '/api/doctor/approved');
       const data = await response.json();
       if (data.success && data.doctors) {
         setDoctors(data.doctors);
@@ -85,7 +86,7 @@ const SelectDoctor = () => {
     if (bookedSlotsMap[key] !== undefined) return; // already fetched this session
     try {
       const res = await fetch(
-        `/api/doctor/slots/${doctorId}?date=${dateStr}&hospitalName=${encodeURIComponent(hospitalName || '')}`
+        `${API_BASE_URL}/api/doctor/slots/${doctorId}?date=${dateStr}&hospitalName=${encodeURIComponent(hospitalName || '')}`
       );
       const data = await res.json();
       if (data.success && data.slots) {

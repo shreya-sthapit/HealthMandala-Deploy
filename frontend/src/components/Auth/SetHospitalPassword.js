@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './AuthPage.css';
 
 const EyeIcon = () => (
@@ -49,7 +50,7 @@ export default function SetHospitalPassword() {
     if (password !== confirm) { setError('Passwords do not match.'); return; }
     setSubmitting(true);
     try {
-      const res = await fetch(process.env.REACT_APP_API_URL + '/api/partner/set-password', {
+      const res = await fetch(API_BASE_URL + '/api/partner/set-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password })

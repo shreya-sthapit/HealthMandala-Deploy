@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './AuthPage.css';
 
 const EyeIcon = () => (
@@ -28,7 +29,7 @@ export default function HospitalLogin() {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(process.env.REACT_APP_API_URL + '/api/auth/login', {
+      const res = await fetch(API_BASE_URL + '/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -48,7 +49,7 @@ export default function HospitalLogin() {
         let enrichedUser = { ...data.user };
         try {
           if (data.user.role === 'staff') {
-            const staffRes = await fetch(`/api/hospital-dashboard/staff/by-user/${data.user.id}`, {
+            const staffRes = await fetch(`${API_BASE_URL}/api/hospital-dashboard/staff/by-user/${data.user.id}`, {
               headers: { Authorization: `Bearer ${data.token}` }
             });
             const staffData = await staffRes.json();
@@ -61,7 +62,7 @@ export default function HospitalLogin() {
             }
           } else if (data.user.role === 'hospital_admin') {
             const adminRes = await fetch(
-              `/api/hospital-dashboard/my-hospital?userId=${data.user.id}`,
+        `${API_BASE_URL}/api/hospital-dashboard/my-hospital?userId=${data.user.id}`,
               { headers: { Authorization: `Bearer ${data.token}` } }
             );
             const adminData = await adminRes.json();

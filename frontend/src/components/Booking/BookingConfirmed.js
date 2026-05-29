@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import QRCode from 'qrcode';
 import html2canvas from 'html2canvas';
+import API_BASE_URL from '../../config/api';
 import './Booking.css';
 
 const BookingConfirmed = () => {
@@ -94,7 +95,7 @@ const BookingConfirmed = () => {
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
       
       if (userData.id) {
-        const response = await fetch(`/api/patient/profile/${userData.id}`);
+        const response = await fetch(`${API_BASE_URL}/api/patient/profile/${userData.id}`);
         const data = await response.json();
         
         if (data.success && data.profile) {

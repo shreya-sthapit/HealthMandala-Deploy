@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './AllSpecialties.css';
 
 const AllSpecialties = () => {
@@ -14,7 +15,7 @@ const AllSpecialties = () => {
 
   const fetchSpecialtyCounts = async () => {
     try {
-      const res = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/specialty-counts');
+      const res = await fetch(API_BASE_URL + '/api/doctor/specialty-counts');
       const data = await res.json();
       if (data.success) {
         setSpecialtyCounts(data.counts);

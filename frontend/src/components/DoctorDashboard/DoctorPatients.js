@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PatientDetailModal from './PatientDetailModal';
+import API_BASE_URL from '../../config/api';
 import './DoctorPatients.css';
 
 const DoctorPatients = ({ embedded = false }) => {
@@ -20,7 +21,7 @@ const DoctorPatients = ({ embedded = false }) => {
       console.log('Fetching patients for doctor:', userData);
       
       if (userData.id) {
-        const response = await fetch(`/api/appointments/doctor-patients/${userData.id}`);
+        const response = await fetch(`${API_BASE_URL}/api/appointments/doctor-patients/${userData.id}`);
         const data = await response.json();
         console.log('Patients response:', data);
         

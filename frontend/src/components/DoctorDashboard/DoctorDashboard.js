@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import PatientDetailModal from './PatientDetailModal';
 import DoctorSchedule from './DoctorSchedule';
 import LogoutModal from '../Profile/LogoutModal';
@@ -58,7 +59,7 @@ function MedicineSearch({ value, onChange }) {
       try {
         const token = localStorage.getItem('token');
         const res = await fetch(
-          `/api/inventory?search=${encodeURIComponent(q)}`,
+          `${API_BASE_URL}/api/inventory?search=${encodeURIComponent(q)}`,
           { headers: token ? { Authorization: `Bearer ${token}` } : {} }
         );
         const data = await res.json();
@@ -176,7 +177,7 @@ const LiveQueue = ({ doctorId, doctorName }) => {
   const fetchQueue = useCallback(async () => {
     if (!doctorId) return;
     try {
-      const res = await fetch(`/api/appointments/doctor/${doctorId}`);
+      const res = await fetch(`${API_BASE_URL}/api/appointments/doctor/${doctorId}`);
       const data = await res.json();
       if (data.success) {
         const t = today();
@@ -212,7 +213,7 @@ const LiveQueue = ({ doctorId, doctorName }) => {
     // Also try WebSocket for instant updates
     let ws;
     try {
-      const wsUrl = process.env.REACT_APP_WS_URL || 'ws://localhost:5001';
+      const wsUrl = process.env.REACT_APP_WS_URL || API_BASE_URL.replace(/^http/, 'ws');
       ws = new WebSocket(wsUrl);
       wsRef.current = ws;
       ws.onmessage = (e) => {
@@ -259,7 +260,7 @@ const LiveQueue = ({ doctorId, doctorName }) => {
       const validMeds = medicines.filter(m => m.name.trim());
 
       // Always create a prescription record so the pharmacist sees the visit
-      await fetch(process.env.REACT_APP_API_URL + '/api/prescriptions/create', {
+      await fetch(API_BASE_URL + '/api/prescriptions/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -278,7 +279,7 @@ const LiveQueue = ({ doctorId, doctorName }) => {
       });
 
       // Mark appointment as 'prescribed' — pharmacist will finalize to 'completed'
-      await fetch(`/api/appointments/complete/${selected._id}`, {
+      await fetch(`${API_BASE_URL}/api/appointments/complete/${selected._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ doctorNotes: advice }),
@@ -532,7 +533,7 @@ const ProfileView = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
     if (!userData.id) { setError('User not found.'); setLoading(false); return; }
-    fetch(`/api/doctor/profile/${userData.id}`)
+    fetch(`${API_BASE_URL}/api/doctor/profile/${userData.id}`)
       .then(r => r.json())
       .then(data => {
         if (data.success) setProfile(data.profile);
@@ -640,8 +641,8 @@ const DoctorDashboard = () => {
 
     // Fetch profile + today count
     Promise.all([
-      fetch(`/api/doctor/profile/${userData.id}`).then(r => r.json()),
-      fetch(`/api/appointments/doctor/${userData.id}`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/doctor/profile/${userData.id}`).then(r => r.json()),
+      fetch(`${API_BASE_URL}/api/appointments/doctor/${userData.id}`).then(r => r.json()),
     ]).then(([profile, apts]) => {
       if (profile.success) {
         setDoctor(d => ({ ...d, specialty: profile.profile.specialization || '' }));
@@ -677,7 +678,7 @@ const DoctorDashboard = () => {
     setPwdSaving(true);
     try {
       const userData = JSON.parse(localStorage.getItem('user') || '{}');
-      const res = await fetch(process.env.REACT_APP_API_URL + '/api/auth/change-password', {
+      const res = await fetch(API_BASE_URL + '/api/auth/change-password', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: userData.id, currentPassword: pwdForm.current, newPassword: pwdForm.next }),

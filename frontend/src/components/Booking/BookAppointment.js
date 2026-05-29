@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './Booking.css';
 import '../Doctors/SelectDoctor.css';
 import '../Doctors/DoctorProfileModal.css';
@@ -195,7 +196,7 @@ const BookAppointment = () => {
       
       setLoadingDepartments(true);
       try {
-        const response = await fetch(`/api/hospital-dashboard/departments/public/${encodeURIComponent(hospitalFilter)}`);
+        const response = await fetch(`${API_BASE_URL}/api/hospital-dashboard/departments/public/${encodeURIComponent(hospitalFilter)}`);
         const data = await response.json();
         
         if (data.success) {
@@ -220,7 +221,7 @@ const BookAppointment = () => {
     const fetchDoctors = async () => {
       try {
         setLoading(true);
-        const response = await fetch(process.env.REACT_APP_API_URL + '/api/doctor/approved');
+        const response = await fetch(API_BASE_URL + '/api/doctor/approved');
         const data = await response.json();
         
         if (data.success && data.doctors && data.doctors.length > 0) {
@@ -327,7 +328,7 @@ const BookAppointment = () => {
           doctorHospitalSchedules: booking.doctor.hospitalSchedules
         });
         
-        const url = `/api/doctor/slots/${doctorId}?date=${formattedDate}&hospitalName=${encodeURIComponent(hospitalName)}`;
+        const url = `${API_BASE_URL}/api/doctor/slots/${doctorId}?date=${formattedDate}&hospitalName=${encodeURIComponent(hospitalName)}`;
         console.log('Slots API URL:', url);
         
         const response = await fetch(url);
@@ -389,7 +390,7 @@ const BookAppointment = () => {
           return;
         }
 
-        const response = await fetch(`/api/patient/profile/${userId}`);
+        const response = await fetch(`${API_BASE_URL}/api/patient/profile/${userId}`);
         const data = await response.json();
         
         console.log('Patient profile response:', data);
@@ -723,7 +724,7 @@ const BookAppointment = () => {
     if (bookedSlotsMap[key] !== undefined) return; // already fetched this session
     try {
       const res = await fetch(
-        `/api/doctor/slots/${doctorId}?date=${dateStr}&hospitalName=${encodeURIComponent(hospitalName || '')}`
+        `${API_BASE_URL}/api/doctor/slots/${doctorId}?date=${dateStr}&hospitalName=${encodeURIComponent(hospitalName || '')}`
       );
       const data = await res.json();
       if (data.success && data.slots) {
@@ -882,7 +883,7 @@ const BookAppointment = () => {
       try {
         console.log('Fetching tokens for:', dateObj.full);
         const response = await fetch(
-          `/api/appointments/available-tokens/${booking.doctor.id}/${dateObj.full}`
+        `${API_BASE_URL}/api/appointments/available-tokens/${booking.doctor.id}/${dateObj.full}`
         );
         const data = await response.json();
         
@@ -974,7 +975,7 @@ const BookAppointment = () => {
     for (const dateObj of candidates) {
       try {
         const res = await fetch(
-          `/api/appointments/available-tokens/${doctor.id}/${dateObj.full}`
+        `${API_BASE_URL}/api/appointments/available-tokens/${doctor.id}/${dateObj.full}`
         );
         const data = await res.json();
         if (!data.success) continue;
@@ -1043,7 +1044,7 @@ const BookAppointment = () => {
 
   const fetchAvailableTokens = async (doctorId, date) => {
     try {
-      const response = await fetch(`/api/appointments/available-tokens/${doctorId}/${date}`);
+      const response = await fetch(`${API_BASE_URL}/api/appointments/available-tokens/${doctorId}/${date}`);
       const data = await response.json();
       
       if (data.success) {
@@ -1151,7 +1152,7 @@ const BookAppointment = () => {
       let patientProfile = null;
       if (userData.id) {
         try {
-          const profileRes = await fetch(`/api/patient/profile/${userData.id}`);
+          const profileRes = await fetch(`${API_BASE_URL}/api/patient/profile/${userData.id}`);
           const profileData = await profileRes.json();
           if (profileData.success && profileData.profile) {
             patientProfile = profileData.profile;
@@ -1254,7 +1255,7 @@ const BookAppointment = () => {
         : '';
 
       // Initiate Khalti payment via backend
-      const initiateRes = await fetch(process.env.REACT_APP_API_URL + '/api/khalti/initiate', {
+      const initiateRes = await fetch(API_BASE_URL + '/api/khalti/initiate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -3201,7 +3202,7 @@ const BookAppointment = () => {
                       }
 
                       // Save dependent to backend
-                      const response = await fetch(`/api/patient/dependents/${userId}`, {
+                      const response = await fetch(`${API_BASE_URL}/api/patient/dependents/${userId}`, {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json',

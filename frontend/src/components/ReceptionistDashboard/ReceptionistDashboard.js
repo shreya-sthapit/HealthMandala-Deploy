@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import '../HospitalDashboard/HospitalDashboard.css';
 import '../Booking/Booking.css';
 import '../Doctors/SelectDoctor.css';
 import LogoutModal from '../Profile/LogoutModal';
 
-const API = '/api';
+const API = `${API_BASE_URL}/api`;
 const ALLOWED = ['receptionist', 'staff', 'hospital_admin', 'admin'];
 
 // ── Week helpers ──────────────────────────────────────────────────────────────

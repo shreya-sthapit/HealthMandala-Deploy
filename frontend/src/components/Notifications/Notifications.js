@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import API_BASE_URL from '../../config/api';
 import './Notifications.css';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -50,7 +51,7 @@ const Notifications = () => {
         }
 
         const token = localStorage.getItem('token');
-        const res = await fetch(`/api/notifications/${userData.id}`, {
+        const res = await fetch(`${API_BASE_URL}/api/notifications/${userData.id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -85,7 +86,7 @@ const Notifications = () => {
       if (!userData.id) return;
 
       const token = localStorage.getItem('token');
-      await fetch(`/api/notifications/${userData.id}/mark-all-read`, {
+      await fetch(`${API_BASE_URL}/api/notifications/${userData.id}/mark-all-read`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -99,7 +100,7 @@ const Notifications = () => {
   const markRead = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await fetch(`/api/notifications/${id}/mark-read`, {
+      await fetch(`${API_BASE_URL}/api/notifications/${id}/mark-read`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}` }
       });

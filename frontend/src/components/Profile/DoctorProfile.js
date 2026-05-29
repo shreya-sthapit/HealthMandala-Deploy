@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './DoctorProfile.css';
 
 const Field = ({ label, value }) => (
@@ -25,7 +26,7 @@ const DoctorProfile = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
     if (!userData.id) { setError('User not found.'); setLoading(false); return; }
-    fetch(`/api/doctor/profile/${userData.id}`)
+    fetch(`${API_BASE_URL}/api/doctor/profile/${userData.id}`)
       .then(r => r.json())
       .then(data => {
         if (data.success) setProfile(data.profile);

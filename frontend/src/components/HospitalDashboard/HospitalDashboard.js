@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from '../../config/api';
 import './HospitalDashboard.css';
 
 import HDOverview from './views/HDOverview';
@@ -13,7 +14,7 @@ import HDProfile from './views/HDProfile';
 import HDReports from './views/HDReports';
 import HDNotifications from './views/HDNotifications';
 
-const API = '/api/hospital-dashboard';
+const API = `${API_BASE_URL}/api/hospital-dashboard`;
 
 const NAV = [
   { section: 'Overview' },
