@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
 
+const requiredEmailEnv = ['EMAIL_USER', 'EMAIL_PASS', 'EMAIL_FROM'];
+
 const transporter = nodemailer.createTransport({
   host: 'smtp-relay.brevo.com',
   port: 587,
@@ -13,11 +15,21 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+const validateEmailConfig = () => {
+  const missing = requiredEmailEnv.filter((key) => !process.env[key]);
+
+  if (missing.length > 0) {
+    throw new Error(`Missing email configuration: ${missing.join(', ')}. Configure these environment variables in Render using Brevo SMTP credentials.`);
+  }
+};
+
 // Send 6-digit OTP to email
 const sendEmailOTP = async (to, name, otp) => {
   try {
+    validateEmailConfig();
+
     await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'HealthMandala <no-reply@healthmandala.com>',
+      from: process.env.EMAIL_FROM,
       to,
       subject: 'Your HealthMandala verification code',
       html: `
@@ -34,7 +46,12 @@ const sendEmailOTP = async (to, name, otp) => {
     });
     console.log(`✅ OTP email sent successfully to ${to}`);
   } catch (error) {
-    console.error('❌ Failed to send OTP email:', error);
+    console.error('❌ Failed to send OTP email:', {
+      message: error.message,
+      code: error.code,
+      command: error.command,
+      response: error.response
+    });
     throw error;
   }
 };
