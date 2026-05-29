@@ -72,7 +72,12 @@ function statusBadge(s) {
 
 /* ── Overview ── */
 function OverviewView({ appointments, loading, onStatusUpdate }) {
-  const today = appointments.filter(a => (a.appointmentDate || '').startsWith(TODAY));
+  const today = appointments.filter(a => {
+    if (!a.appointmentDate) return false;
+    const d = new Date(a.appointmentDate);
+    const localYMD = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return localYMD === TODAY;
+  });
   const stats = [
     { label: "Today's Total",   value: today.length,                                                                         color: 'teal',   icon: '📋' },
     { label: 'Not Yet Arrived', value: today.filter(a => a.status === 'pending' || a.status === 'confirmed').length,        color: 'orange', icon: '⏳' },
@@ -127,18 +132,35 @@ function OverviewView({ appointments, loading, onStatusUpdate }) {
 function QueueView({ appointments, loading, onStatusUpdate }) {
   const [search, setSearch] = useState('');
   const [doctorFilter, setDoctorFilter] = useState('');
+  const [todayDoctors, setTodayDoctors] = useState([]);
 
-  // Only today's appointments
+  // Fetch doctors on duty today from the backend
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user.hospitalId) return;
+
+    // Pass today's date (YYYY-MM-DD) so the server uses the client's local date
+    const todayStr = toYMD(new Date());
+    fetch(`${API}/hospital-dashboard/doctors-on-duty?hospitalId=${user.hospitalId}&date=${todayStr}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) setTodayDoctors(data.doctors || []);
+      })
+      .catch(() => {});
+  }, []);
+
+  // Only today's appointments — compare using local date string to avoid UTC shift
   const todayApts = appointments
-    .filter(a => (a.appointmentDate || '').startsWith(TODAY))
+    .filter(a => {
+      if (!a.appointmentDate) return false;
+      // appointmentDate comes as ISO string; convert to local YYYY-MM-DD for comparison
+      const d = new Date(a.appointmentDate);
+      const localYMD = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      return localYMD === TODAY;
+    })
     .sort((a, b) => (a.tokenNumber || 0) - (b.tokenNumber || 0));
-
-  // Build doctor list from today's appointments (on-duty = has appt today)
-  const todayDoctors = [...new Map(
-    todayApts
-      .filter(a => a.doctorName)
-      .map(a => [a.doctorName, { name: a.doctorName, specialty: a.doctorSpecialization || '' }])
-  ).values()];
 
   // Apply filters
   const filtered = todayApts.filter(a => {

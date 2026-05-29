@@ -992,4 +992,73 @@ router.get('/my-hospital', async (req, res) => {
   }
 });
 
+// ── Doctors on duty today (for receptionist queue dropdown) ──────────────────
+// GET /api/hospital-dashboard/doctors-on-duty?hospitalId=<id>
+router.get('/doctors-on-duty', async (req, res) => {
+  try {
+    const { hospitalId } = req.query;
+    if (!hospitalId || !mongoose.Types.ObjectId.isValid(hospitalId)) {
+      return res.status(400).json({ error: 'Valid hospitalId required' });
+    }
+
+    // Day name for today (Nepal time — server may be UTC, so derive from current UTC offset)
+    const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    // Nepal is UTC+5:45; use server local time which should be configured correctly,
+    // but also accept a ?date=YYYY-MM-DD override from the client for safety
+    const dateStr = req.query.date; // optional YYYY-MM-DD from client
+    let todayDayName;
+    if (dateStr) {
+      const [y, m, d] = dateStr.split('-').map(Number);
+      todayDayName = DAY_NAMES[new Date(y, m - 1, d).getDay()];
+    } else {
+      todayDayName = DAY_NAMES[new Date().getDay()];
+    }
+
+    // Find the hospital to get its name (doctors are linked by both ObjectId and name)
+    const hospital = await HospitalPartner.findById(hospitalId).select('hospitalName');
+    if (!hospital) return res.status(404).json({ error: 'Hospital not found' });
+
+    // Find approved doctors linked to this hospital
+    const doctors = await DoctorRegistration.find({
+      managedByHospitals: hospitalId,
+      status: 'approved',
+    }).select('firstName lastName specialization hospitalSchedules schedule availableDays');
+
+    // Filter to those scheduled today
+    const onDuty = doctors.filter(doc => {
+      // Check per-hospital schedule first
+      const hospSchedule = doc.hospitalSchedules?.find(
+        hs => hs.hospital === hospital.hospitalName
+      );
+      if (hospSchedule?.schedule?.length) {
+        return hospSchedule.schedule.some(
+          s => s.day === todayDayName && s.active !== false
+        );
+      }
+      // Fall back to legacy flat schedule
+      if (doc.schedule?.length) {
+        return doc.schedule.some(
+          s => s.day === todayDayName && s.active !== false
+        );
+      }
+      // Fall back to availableDays array
+      if (doc.availableDays?.length) {
+        return doc.availableDays.includes(todayDayName);
+      }
+      return false;
+    });
+
+    const result = onDuty.map(doc => ({
+      _id: doc._id,
+      name: `Dr. ${doc.firstName} ${doc.lastName}`,
+      specialty: doc.specialization || '',
+    }));
+
+    res.json({ success: true, doctors: result, day: todayDayName });
+  } catch (err) {
+    console.error('doctors-on-duty error:', err);
+    res.status(500).json({ error: 'Failed to fetch doctors on duty', message: err.message });
+  }
+});
+
 module.exports = router;
