@@ -20,7 +20,7 @@ const DoctorProfileModal = ({ doctor, onClose, nextAvailable }) => {
   }, []);
 
   const photoPath = doctor.profilePhoto
-    ? doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')
+    ? (doctor.profilePhoto.startsWith('http') ? doctor.profilePhoto : doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, ''))
     : null;
 
   const getInitial = () => {
@@ -36,7 +36,7 @@ const DoctorProfileModal = ({ doctor, onClose, nextAvailable }) => {
           <div className="modal-doctor-photo">
             {photoPath ? (
               <img 
-                src={`/${photoPath}`} 
+                src={photoPath.startsWith('http') ? photoPath : `/${photoPath}`} 
                 alt={doctor.name}
                 onError={(e) => { 
                   e.target.style.display = 'none'; 

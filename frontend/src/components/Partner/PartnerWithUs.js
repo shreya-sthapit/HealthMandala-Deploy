@@ -131,10 +131,6 @@ export default function PartnerWithUs() {
   const [submitError, setSubmitError] = useState('');
   const [errors, setErrors] = useState({});
 
-  const [statusEmail, setStatusEmail] = useState('');
-  const [statusResult, setStatusResult] = useState(null);
-  const [statusLoading, setStatusLoading] = useState(false);
-
   const [form, setForm] = useState({
     hospitalName: '', facilityCategory: '', dohsLicenseNumber: '', panVatNumber: '',
     hospitalPhone: '', officialEmail: '',
@@ -198,17 +194,6 @@ export default function PartnerWithUs() {
     finally { setSubmitting(false); }
   };
 
-  const handleCheckStatus = async (e) => {
-    e.preventDefault();
-    setStatusLoading(true); setStatusResult(null);
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/partner/status/${encodeURIComponent(statusEmail)}`);
-      const data = await res.json();
-      setStatusResult(data.success ? data.application : { error: data.error });
-    } catch { setStatusResult({ error: 'Unable to connect.' }); }
-    finally { setStatusLoading(false); }
-  };
-
   if (submitted) return (
     <div className="pw-page">
       <div className="pw-hero">
@@ -250,9 +235,6 @@ export default function PartnerWithUs() {
 
 
           <div className="pw-success-actions">
-            <button className="pw-btn-primary" onClick={() => { setSubmitted(false); setStep('status'); }}>
-              Track Status
-            </button>
             <Link to="/" className="pw-btn-outline">Back to Home</Link>
           </div>
         </div>
@@ -273,30 +255,7 @@ export default function PartnerWithUs() {
 
       <div className="pw-container">
 
-        {step === 'status' ? (
-          <div className="pw-status-card">
-            <h2>Check Application Status</h2>
-            <p>Enter the official email address you used when applying.</p>
-            <form onSubmit={handleCheckStatus} className="pw-status-form">
-              <input type="email" placeholder="admin@yourhospital.gov.np"
-                value={statusEmail} onChange={e => setStatusEmail(e.target.value)} required />
-              <button type="submit" disabled={statusLoading}>{statusLoading ? 'Checking...' : 'Check Status'}</button>
-            </form>
-            {statusResult && (statusResult.error ? (
-              <p className="pw-err-msg">{statusResult.error}</p>
-            ) : (
-              <div className="pw-status-result">
-                <div className="pw-status-name">{statusResult.hospitalName}</div>
-                <span className="pw-status-badge" style={{ background: statusMeta[statusResult.status]?.bg, color: statusMeta[statusResult.status]?.color }}>
-                  <StatusIcon type={statusResult.status} />
-                  {statusMeta[statusResult.status]?.label}
-                </span>
-                <div className="pw-status-date">Submitted: {new Date(statusResult.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                {statusResult.adminNote && <div className="pw-status-note"><strong>Note:</strong> {statusResult.adminNote}</div>}
-              </div>
-            ))}
-          </div>
-        ) : (
+        {(
           <form className="pw-form" onSubmit={handleSubmit} noValidate>
 
             {/* Section 1 — Facility & Legal Identity */}

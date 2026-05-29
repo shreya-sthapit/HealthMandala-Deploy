@@ -285,7 +285,7 @@ const SelectDoctor = () => {
     console.log('✅ User authenticated, proceeding with booking');
     // User is authenticated, proceed with booking
     const photoPath = doc.profilePhoto
-      ? doc.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')
+      ? (doc.profilePhoto.startsWith('http') ? doc.profilePhoto : doc.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, ''))
       : null;
     navigate('/book-appointment', {
       state: {
@@ -410,7 +410,7 @@ const SelectDoctor = () => {
           <div className="doctor-list">
             {filtered.map(doc => {
               const photoPath = doc.profilePhoto
-                ? doc.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')
+                ? (doc.profilePhoto.startsWith('http') ? doc.profilePhoto : doc.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, ''))
                 : null;
               const dates = getNextDates(doc);
               const days = getAvailableDays(doc);
@@ -426,7 +426,7 @@ const SelectDoctor = () => {
                   >
                     <div className="doctor-photo">
                       {photoPath ? (
-                        <img src={`/${photoPath}`} alt={doc.name}
+                        <img src={photoPath.startsWith('http') ? photoPath : `/${photoPath}`} alt={doc.name}
                           onError={e => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}
                         />
                       ) : null}
@@ -561,7 +561,9 @@ const SelectDoctor = () => {
                           className="check-schedule-btn"
                           onClick={() => {
                             // Allow everyone to view schedules (no auth check)
-                            const photoPath = doc.profilePhoto?.replace(/\\/g, '/').replace(/^backend\//, '');
+                            const photoPath = doc.profilePhoto
+                              ? (doc.profilePhoto.startsWith('http') ? doc.profilePhoto : doc.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, ''))
+                              : null;
                             navigate('/book-appointment', {
                               state: {
                                 preSelectedDoctor: {

@@ -126,7 +126,7 @@ const FindDoctors = () => {
                 <div className="doctor-avatar-large">
                   {doctor.profilePhoto ? (
                     <img 
-                      src={`/${doctor.profilePhoto}`} 
+                      src={doctor.profilePhoto.startsWith('http') ? doctor.profilePhoto : `/${doctor.profilePhoto}`} 
                       alt={doctor.name}
                       onError={(e) => {
                         e.target.style.display = 'none';

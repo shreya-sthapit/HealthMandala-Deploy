@@ -24,7 +24,6 @@ const PatientRegistrationForm = () => {
   const email = existingData.email || searchParams.get('email') || '';
   const role = existingData.role || searchParams.get('role') || 'patient';
 
-  const [profilePreview, setProfilePreview] = useState(null);
   const [frontPreview, setFrontPreview] = useState(null);
   const [backPreview, setBackPreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +36,6 @@ const PatientRegistrationForm = () => {
 
   const [formData, setFormData] = useState({
     // Personal Info
-    profilePhoto: null,
     dateOfBirth: '',
     gender: '',
     bloodGroup: '',
@@ -89,18 +87,6 @@ const PatientRegistrationForm = () => {
     } else {
       setNidError('');
     }
-  };
-
-  const handleProfilePhoto = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) { setError('Profile photo must be under 5MB'); return; }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData(f => ({ ...f, profilePhoto: file }));
-      setProfilePreview(reader.result);
-    };
-    reader.readAsDataURL(file);
   };
 
   const handleNIDImage = (e, side) => {
@@ -190,7 +176,6 @@ const PatientRegistrationForm = () => {
       fd.append('medicalConditions', formData.medicalConditions);
       fd.append('allergies', formData.allergies);
       fd.append('nidNumber', formData.nidNumber);
-      if (formData.profilePhoto) fd.append('profilePhoto', formData.profilePhoto);
       fd.append('nidFront', formData.nidFront);
       fd.append('nidBack', formData.nidBack);
 
@@ -230,28 +215,11 @@ const PatientRegistrationForm = () => {
         {/* Full-width form panel */}
         <div className="prf-right">
           <div className="prf-form-wrapper">
-            {/* ── Page header row: title+subtitle left, photo right ── */}
+            {/* ── Page header ── */}
             <div className="prf-header-row">
               <div>
                 <h2 className="prf-page-title">Complete Your Profile</h2>
                 <p className="prf-page-subtitle">{firstName ? `Welcome, ${firstName}! ` : ''}Fill in the details to finish registration</p>
-              </div>
-              <div className="prl-form-wrapper" style={{ width: 'auto', padding: 0 }}>
-                {profilePreview ? (
-                  <div className="profile-preview">
-                    <img src={profilePreview} alt="Profile" />
-                    <button type="button" className="remove-btn"
-                      onClick={() => { setFormData(f => ({ ...f, profilePhoto: null })); setProfilePreview(null); }}>✕</button>
-                  </div>
-                ) : (
-                  <label className="profile-upload-area" title="Upload profile photo">
-                    <input type="file" accept="image/*" onChange={handleProfilePhoto} hidden />
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem' }}>
-                      <div style={{ width: 32, height: 32, background: '#6dbc95', color: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>+</div>
-                      <span style={{ fontSize: '0.7rem', color: '#64748b' }}>Upload</span>
-                    </div>
-                  </label>
-                )}
               </div>
             </div>
 

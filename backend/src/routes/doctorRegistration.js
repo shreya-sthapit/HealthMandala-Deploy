@@ -479,6 +479,30 @@ router.get('/slots/:doctorId', async (req, res) => {
   }
 });
 
+// ── Upload / update doctor profile photo ─────────────────────────────────────
+// PUT /api/doctor/profile-photo/:userId
+router.put('/profile-photo/:userId', uploadConfigs.single('profilePhoto'), async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!req.file) return res.status(400).json({ error: 'No image file provided.' });
+
+    // Cloudinary returns the full URL in req.file.path
+    const photoUrl = req.file.path;
+
+    let doctor = await DoctorRegistration.findOne({ userId });
+    if (!doctor) doctor = await DoctorRegistration.findById(userId);
+    if (!doctor) return res.status(404).json({ error: 'Doctor profile not found.' });
+
+    doctor.profilePhoto = photoUrl;
+    await doctor.save();
+
+    res.json({ success: true, profilePhoto: photoUrl });
+  } catch (err) {
+    console.error('Profile photo upload error:', err);
+    res.status(500).json({ error: 'Failed to upload photo.', message: err.message });
+  }
+});
+
 module.exports = router;
 
 // Health check

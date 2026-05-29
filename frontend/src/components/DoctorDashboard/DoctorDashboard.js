@@ -529,9 +529,13 @@ const ProfileView = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const photoInputRef = useRef(null);
+
+  const userData = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
     if (!userData.id) { setError('User not found.'); setLoading(false); return; }
     fetch(`${API_BASE_URL}/api/doctor/profile/${userData.id}`)
       .then(r => r.json())
@@ -541,7 +545,34 @@ const ProfileView = () => {
       })
       .catch(() => setError('Could not connect to server.'))
       .finally(() => setLoading(false));
-  }, []);
+  }, []); // eslint-disable-line
+
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { setUploadError('Image must be under 5MB.'); return; }
+    setUploading(true);
+    setUploadError('');
+    try {
+      const fd = new FormData();
+      fd.append('profilePhoto', file);
+      const res = await fetch(`${API_BASE_URL}/api/doctor/profile-photo/${userData.id}`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: fd,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setProfile(p => ({ ...p, profilePhoto: data.profilePhoto }));
+      } else {
+        setUploadError(data.error || 'Upload failed.');
+      }
+    } catch {
+      setUploadError('Could not connect to server.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   if (loading) return (
     <div className="dp-loading"><div className="dp-spinner" /><p>Loading profile…</p></div>
@@ -552,7 +583,10 @@ const ProfileView = () => {
 
   const p = profile;
   const initials = `${p.firstName?.[0] || ''}${p.lastName?.[0] || ''}`.toUpperCase();
-  const avatarSrc = p.profilePhoto ? `/${p.profilePhoto}` : null;
+  // Support both Cloudinary full URLs (https://) and legacy local paths
+  const avatarSrc = p.profilePhoto
+    ? (p.profilePhoto.startsWith('http') ? p.profilePhoto : `/${p.profilePhoto}`)
+    : null;
 
   return (
     <div className="dp-content">
@@ -560,12 +594,51 @@ const ProfileView = () => {
 
         {/* ── Left column: photo + signature ── */}
         <div className="dp-left-col">
-          <div className="dp-photo-card">
+          {/* Clickable photo card — click to upload a new photo */}
+          <div
+            className="dp-photo-card"
+            style={{ position: 'relative', cursor: 'pointer' }}
+            onClick={() => photoInputRef.current?.click()}
+            title="Click to change profile photo"
+          >
             {avatarSrc
               ? <img src={avatarSrc} alt="Profile" className="dp-avatar-sq-img" />
               : <div className="dp-avatar-sq-initials">{initials}</div>
             }
+            {/* Hover overlay */}
+            <div style={{
+              position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s',
+              borderRadius: 'inherit', color: '#fff', fontSize: '0.8rem', fontWeight: 600, gap: '0.35rem',
+            }}
+              onMouseEnter={e => e.currentTarget.style.opacity = 1}
+              onMouseLeave={e => e.currentTarget.style.opacity = 0}
+            >
+              {uploading
+                ? <span>Uploading…</span>
+                : <>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <span>Change Photo</span>
+                  </>
+              }
+            </div>
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              style={{ display: 'none' }}
+              onChange={handlePhotoChange}
+            />
           </div>
+          {uploadError && (
+            <p style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.5rem', textAlign: 'center' }}>
+              {uploadError}
+            </p>
+          )}
 
           {p.signature && (
             <div className="dp-section dp-sig-card">

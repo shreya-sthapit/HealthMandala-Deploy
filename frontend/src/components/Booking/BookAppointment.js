@@ -100,6 +100,13 @@ const getDepartmentIcon = (departmentName) => {
   return DEPT_ICONS[departmentName] || '🏥';
 };
 
+// Resolve a doctor profilePhoto value to a usable img src
+// Cloudinary returns full https:// URLs; legacy paths need a leading /
+const resolvePhotoUrl = (photo) => {
+  if (!photo) return null;
+  return photo.startsWith('http') ? photo : `/${photo.replace(/\\/g, '/').replace(/^backend\//, '')}`;
+};
+
 const BookAppointment = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -744,9 +751,7 @@ const BookAppointment = () => {
   };
 
   const handleBookSlot = (doc, date, time) => {
-    const photoPath = doc.profilePhoto
-      ? doc.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')
-      : null;
+    const photoPath = resolvePhotoUrl(doc.profilePhoto);
     
     setBooking(prev => ({
       ...prev,
@@ -1535,7 +1540,7 @@ const BookAppointment = () => {
                                     <div className="avatar">
                                       {doc.profilePhoto ? (
                                         <img 
-                                          src={`/${doc.profilePhoto}`} 
+                                          src={resolvePhotoUrl(doc.profilePhoto)} 
                                           alt={doc.name}
                                           onError={(e) => {
                                             e.target.style.display = 'none';
@@ -1594,7 +1599,7 @@ const BookAppointment = () => {
                                 <div className="avatar">
                                   {doc.profilePhoto ? (
                                     <img 
-                                      src={`/${doc.profilePhoto}`} 
+                                      src={resolvePhotoUrl(doc.profilePhoto)} 
                                       alt={doc.name}
                                       onError={(e) => {
                                         e.target.style.display = 'none';
@@ -1709,7 +1714,7 @@ const BookAppointment = () => {
                     }
 
                     return displayed.map(doc => {
-                      const photoPath = doc.profilePhoto?.replace(/\\/g, '/').replace(/^backend\//, '');
+                      const photoPath = resolvePhotoUrl(doc.profilePhoto);
                       const dates = getNextDates(doc);
                       const nextAvailable = getNextAvailableTime(doc);
 
@@ -2034,7 +2039,7 @@ const BookAppointment = () => {
                                 <button
                                   className="check-schedule-btn"
                                   onClick={() => {
-                                    const photoPath = doc.profilePhoto?.replace(/\\/g, '/').replace(/^backend\//, '');
+                                    const photoPath = resolvePhotoUrl(doc.profilePhoto);
                                     setBooking(prev => ({
                                       ...prev,
                                       doctor: {
@@ -2109,7 +2114,7 @@ const BookAppointment = () => {
                       <div className="step4-doctor-avatar" style={{ margin: '0 auto 1rem auto' }}>
                         {booking.doctor?.profilePhoto ? (
                           <img 
-                            src={`/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
+                            src={resolvePhotoUrl(booking.doctor.profilePhoto)}
                             alt={booking.doctor.name}
                             onError={(e) => {
                               e.target.style.display = 'none';
@@ -2559,7 +2564,7 @@ const BookAppointment = () => {
                         <div className="step4-doctor-avatar">
                           {booking.doctor?.profilePhoto ? (
                             <img 
-                              src={`/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
+                              src={resolvePhotoUrl(booking.doctor.profilePhoto)}
                               alt={booking.doctor.name}
                               onError={(e) => {
                                 e.target.style.display = 'none';
@@ -2756,7 +2761,7 @@ const BookAppointment = () => {
                         <div className="step4-doctor-avatar">
                           {booking.doctor?.profilePhoto ? (
                             <img 
-                              src={`/${booking.doctor.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`}
+                              src={resolvePhotoUrl(booking.doctor.profilePhoto)}
                               alt={booking.doctor.name}
                               onError={(e) => {
                                 e.target.style.display = 'none';
@@ -3264,7 +3269,7 @@ const BookAppointment = () => {
               <div className="modal-doctor-photo">
                 {selectedDoctorProfile.profilePhoto ? (
                   <img 
-                    src={`/${selectedDoctorProfile.profilePhoto.replace(/\\/g, '/').replace(/^backend\//, '')}`} 
+                    src={resolvePhotoUrl(selectedDoctorProfile.profilePhoto)} 
                     alt={selectedDoctorProfile.name}
                     onError={(e) => { 
                       e.target.style.display = 'none'; 
