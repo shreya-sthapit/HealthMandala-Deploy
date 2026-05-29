@@ -403,8 +403,8 @@ const LandingPage = () => {
       {/* Browse Doctors Section */}
       <section className="browse-doctors">
         <div className="section-title">
-          <h2>Appointments with Top Doctors</h2>
-          <p>Experienced medical practitioners available to schedule appointments</p>
+          <h2>Care from experienced practitioners</h2>
+          <p>Experienced practitioners ready for your next visit</p>
         </div>
         
         {loadingDoctors ? (
@@ -469,7 +469,7 @@ const LandingPage = () => {
       <section className="browse-specialties">
         <div className="specialties-header">
           <div className="specialties-header-left">
-            <h2>Easy Appointment with 24 area of specialities</h2>
+            <h2>Browse by specialization</h2>
             <p>More than 200 Doctors on HealthMandala providing easy appointment</p>
           </div>
           <Link to="/specialties" className="view-all-btn">View All Specialists →</Link>
@@ -531,11 +531,64 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* About Section */}
+      <section id="about" style={{ background: '#fff', padding: '5rem 2rem' }}>
+        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', alignItems: 'center', gap: '4rem', flexWrap: 'wrap' }}>
+
+          {/* Left — text */}
+          <div style={{ flex: '1 1 340px', minWidth: 0 }}>
+            <p style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.12em', color: '#00a896', textTransform: 'uppercase', marginBottom: '1rem' }}>
+              About HealthMandala
+            </p>
+            <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, color: '#1a2e35', lineHeight: 1.25, marginBottom: '1.25rem' }}>
+              Making quality healthcare accessible for everyone in Nepal
+            </h2>
+            <p style={{ color: '#475569', fontSize: '1rem', lineHeight: 1.75, marginBottom: '1.75rem', maxWidth: '480px' }}>
+              We connect patients with verified doctors and partner hospitals through a secure, easy-to-use platform. From search to confirmation, every step is designed for clarity, speed, and trust.
+            </p>
+            <Link
+              to="/partner"
+              style={{ color: '#00a896', fontWeight: 700, fontSize: '0.95rem', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+            >
+              Partner with us →
+            </Link>
+          </div>
+
+          {/* Right — stats */}
+          <div style={{ flex: '1 1 340px', display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+            {[
+              { value: '200+', label: 'Doctors on platform' },
+              { value: '24+',  label: 'Medical specialties' },
+              { value: '100%', label: 'Secure bookings' },
+            ].map(stat => (
+              <div
+                key={stat.label}
+                style={{
+                  flex: '1 1 120px',
+                  background: '#f0fdfa',
+                  borderRadius: '16px',
+                  padding: '2rem 1.5rem',
+                  textAlign: 'center',
+                }}
+              >
+                <div style={{ fontSize: '2rem', fontWeight: 800, color: '#00a896', marginBottom: '0.5rem' }}>
+                  {stat.value}
+                </div>
+                <div style={{ fontSize: '0.85rem', color: '#64748b', lineHeight: 1.4 }}>
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </section>
+
       {/* Browse Hospitals Section */}
       <section className="browse-hospitals">
         <div className="section-title">
-          <h2>Book Appointment at Hospital</h2>
-          <p>For easy appointments from any place at top hospitals in Nepal</p>
+          <h2>Book at leading hospitals</h2>
+          <p>Top facilities across Nepal, available online</p>
         </div>
         
         {loadingHospitals ? (
