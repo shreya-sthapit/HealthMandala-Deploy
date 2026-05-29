@@ -216,4 +216,30 @@ const sendStaffInviteEmail = async (to, staffName, hospitalName, role, setPasswo
   }
 };
 
-module.exports = { transporter, sendEmailOTP, sendWelcomeEmail, sendHospitalInviteEmail, sendDoctorInviteEmail, sendStaffInviteEmail };
+const sendPasswordResetEmail = async (to, name, otp) => {
+  try {
+    validateEmailConfig();
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM,
+      to,
+      subject: 'Reset your HealthMandala password',
+      html: `
+        <div style="font-family:Segoe UI,sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#f0fdfa;border-radius:12px;">
+          <h2 style="color:#00a896;margin-bottom:8px;">HealthMandala</h2>
+          <h3 style="color:#1e293b;">Hi ${name}, reset your password</h3>
+          <p style="color:#475569;line-height:1.6;">Use the code below to reset your password. It expires in <strong>10 minutes</strong>.</p>
+          <div style="font-size:2.5rem;font-weight:800;letter-spacing:0.3em;color:#00a896;text-align:center;padding:24px;background:#fff;border-radius:12px;margin:24px 0;border:2px solid #e0f5f2;">${otp}</div>
+          <p style="color:#94a3b8;font-size:13px;">If you didn't request a password reset, you can safely ignore this email.</p>
+          <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;"/>
+          <p style="color:#94a3b8;font-size:12px;">© ${new Date().getFullYear()} HealthMandala. All rights reserved.</p>
+        </div>
+      `,
+    });
+    console.log(`✅ Password reset email sent to ${to}`);
+  } catch (error) {
+    console.error('❌ Failed to send password reset email:', error.message);
+    throw error;
+  }
+};
+
+module.exports = { transporter, sendEmailOTP, sendWelcomeEmail, sendHospitalInviteEmail, sendDoctorInviteEmail, sendStaffInviteEmail, sendPasswordResetEmail };

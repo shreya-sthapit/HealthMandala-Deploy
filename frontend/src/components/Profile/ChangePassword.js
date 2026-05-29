@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import API_BASE_URL from '../../config/api';
 import './ChangePassword.css';
 
 // ── Eye icons ─────────────────────────────────────────────────────────────────
@@ -29,25 +30,56 @@ const ChangePassword = () => {
   const [showPwd, setShowPwd] = useState({ current: false, newPwd: false, confirm: false });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const checks = pwdChecks(passwords.newPwd);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setError('');
+    setSuccess(false);
+
     if (!passwords.current) { setError('Please enter your current password.'); return; }
     if (passwords.newPwd !== passwords.confirm) { setError('New passwords do not match.'); return; }
     if (!checks.length) { setError('Password must be at least 8 characters.'); return; }
     if (!checks.number) { setError('Password must include at least one number.'); return; }
-    // In production: call API
-    setSuccess(true);
-    setPasswords({ current: '', newPwd: '', confirm: '' });
-    setTimeout(() => setSuccess(false), 3000);
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const userId = user.id || user._id;
+    if (!userId) { setError('Session expired. Please log in again.'); return; }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({
+          userId,
+          currentPassword: passwords.current,
+          newPassword: passwords.newPwd,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSuccess(true);
+        setPasswords({ current: '', newPwd: '', confirm: '' });
+        setTimeout(() => setSuccess(false), 4000);
+      } else {
+        setError(data.error || 'Failed to update password. Please try again.');
+      }
+    } catch {
+      setError('Unable to connect to server. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fields = [
-    { key: 'current', label: 'Current Password', placeholder: 'Enter current password' },
-    { key: 'newPwd',  label: 'New Password',     placeholder: 'Enter new password' },
-    { key: 'confirm', label: 'Confirm New Password', placeholder: 'Re-enter new password' },
+    { key: 'current', label: 'Current Password',     placeholder: 'Enter current password' },
+    { key: 'newPwd',  label: 'New Password',          placeholder: 'Enter new password' },
+    { key: 'confirm', label: 'Confirm New Password',  placeholder: 'Re-enter new password' },
   ];
 
   return (
@@ -72,7 +104,7 @@ const ChangePassword = () => {
                   type={showPwd[key] ? 'text' : 'password'}
                   placeholder={placeholder}
                   value={passwords[key]}
-                  onChange={(e) => setPasswords({ ...passwords, [key]: e.target.value })}
+                  onChange={(e) => { setPasswords({ ...passwords, [key]: e.target.value }); setError(''); }}
                 />
                 <button
                   type="button"
@@ -102,8 +134,8 @@ const ChangePassword = () => {
             </div>
           )}
 
-          <button className="cp-submit-btn" onClick={handleSubmit}>
-            Update Password
+          <button className="cp-submit-btn" onClick={handleSubmit} disabled={loading}>
+            {loading ? 'Updating...' : 'Update Password'}
           </button>
         </div>
 

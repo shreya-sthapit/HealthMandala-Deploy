@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { sendEmailOTP } = require('../config/mailer');
+const { sendEmailOTP, sendPasswordResetEmail } = require('../config/mailer');
 const { verifyNMCDoctor } = require('../utils/nmcVerify');
 
 // In-memory OTP store: email → { otp, expiresAt, userData }
 const emailOtpStore = new Map();
+
+// In-memory password-reset OTP store: email → { otp, expiresAt }
+const resetOtpStore = new Map();
 
 // ── Step 1: Send OTP to email ──
 router.post('/send-email-otp', async (req, res) => {
@@ -289,12 +292,10 @@ router.put('/verify-email/:id', async (req, res) => {
   }
 });
 
-module.exports = router;
-
 // Health check
 router.get('/health', (req, res) => res.json({ status: 'ok', service: 'auth' }));
 
-// Change password
+// ── Change password (logged-in user) ─────────────────────────────────────────
 router.put('/change-password', async (req, res) => {
   try {
     const { userId, currentPassword, newPassword } = req.body;
@@ -304,14 +305,90 @@ router.put('/change-password', async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: 'User not found.' });
 
-    const bcrypt = require('bcryptjs');
-    const match = await bcrypt.compare(currentPassword, user.password);
+    const match = await user.comparePassword(currentPassword);
     if (!match) return res.status(400).json({ error: 'Current password is incorrect.' });
 
-    user.password = newPassword; // pre-save hook will hash it
+    user.password = newPassword; // pre-save hook hashes it
     await user.save();
     res.json({ success: true, message: 'Password updated successfully.' });
   } catch (error) {
     res.status(500).json({ error: 'Failed to change password.', message: error.message });
   }
 });
+
+// ── Forgot password — Step 1: send OTP ───────────────────────────────────────
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    // Always respond success to avoid email enumeration
+    if (!user) return res.json({ success: true, message: 'If that email exists, a reset code has been sent.' });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+    resetOtpStore.set(email.toLowerCase().trim(), { otp, expiresAt, userId: user._id.toString() });
+
+    await sendPasswordResetEmail(email, user.firstName, otp);
+    res.json({ success: true, message: 'Reset code sent to your email.' });
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({ error: 'Failed to send reset code.', message: error.message });
+  }
+});
+
+// ── Forgot password — Step 2: verify OTP ─────────────────────────────────────
+router.post('/verify-reset-otp', async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) return res.status(400).json({ error: 'Email and OTP are required.' });
+
+    const record = resetOtpStore.get(email.toLowerCase().trim());
+    if (!record) return res.status(400).json({ error: 'No reset request found. Please request a new code.' });
+    if (Date.now() > record.expiresAt) {
+      resetOtpStore.delete(email.toLowerCase().trim());
+      return res.status(400).json({ error: 'Reset code has expired. Please request a new one.' });
+    }
+    if (record.otp !== otp) return res.status(400).json({ error: 'Invalid code. Please try again.' });
+
+    // Issue a short-lived reset token (5 min)
+    const resetToken = jwt.sign(
+      { resetUserId: record.userId, email: email.toLowerCase().trim() },
+      process.env.JWT_SECRET,
+      { expiresIn: '5m' }
+    );
+    res.json({ success: true, resetToken });
+  } catch (error) {
+    res.status(500).json({ error: 'Verification failed.', message: error.message });
+  }
+});
+
+// ── Forgot password — Step 3: set new password ───────────────────────────────
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { resetToken, newPassword } = req.body;
+    if (!resetToken || !newPassword) return res.status(400).json({ error: 'Token and new password are required.' });
+    if (newPassword.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+
+    let payload;
+    try {
+      payload = jwt.verify(resetToken, process.env.JWT_SECRET);
+    } catch {
+      return res.status(400).json({ error: 'Reset session expired. Please start over.' });
+    }
+
+    const user = await User.findById(payload.resetUserId);
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    user.password = newPassword; // pre-save hook hashes it
+    await user.save();
+    resetOtpStore.delete(payload.email);
+
+    res.json({ success: true, message: 'Password reset successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to reset password.', message: error.message });
+  }
+});
+
+module.exports = router;
