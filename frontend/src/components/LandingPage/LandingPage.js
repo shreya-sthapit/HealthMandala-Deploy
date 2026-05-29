@@ -648,38 +648,6 @@ const LandingPage = () => {
 
       {/* CTA Section removed */}
 
-      {/* Doctor CTA Section */}
-      <section className="doctor-cta-section">
-        <div className="doctor-cta-inner">
-          <div className="doctor-cta-left">
-            <img src="/Text.png" alt="Are you a Doctor?" className="doctor-cta-img" />
-          </div>
-          <div className="doctor-cta-right">
-            <h2>Join our growing network of<br/>healthcare professionals <span>NOW!</span></h2>
-            <p>Register as a doctor on HealthMandala and connect with thousands of patients. Manage your schedule, and appointments all in one place.</p>
-            <div className="doctor-cta-actions">
-              <Link to="/doctor-auth" className="btn btn-primary doctor-signup-btn">
-                Doctor Login
-              </Link>
-            </div>
-            <div className="doctor-cta-perks">
-              <div className="perk">
-                <span className="perk-icon">✓</span>
-                <span>Flexible scheduling</span>
-              </div>
-              <div className="perk">
-                <span className="perk-icon">✓</span>
-                <span>Streamlined workflow</span>
-              </div>
-              <div className="perk">
-                <span className="perk-icon">✓</span>
-                <span>Automated reminders</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Footer is rendered globally in App.js */}
     </>
   );
